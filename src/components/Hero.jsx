@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
 export default function Hero({ title, description, children }) {
   return (
@@ -14,10 +15,22 @@ export default function Hero({ title, description, children }) {
             <h1>{title}</h1>
             <p>{description}</p>
             <div>
-              <button className="btn btn-primary me-3 d-inline-block">
+              <Button
+                as={NavLink}
+                to="/login"
+                variant="primary"
+                className="me-2"
+              >
                 Login
-              </button>
-              <button className="btn btn-outline-primary">Register</button>
+              </Button>
+              <Button
+                as={NavLink}
+                to="/register"
+                variant="outline-primary"
+                className="me-3"
+              >
+                Register
+              </Button>
             </div>
           </Col>
           <Col xs={12} md={6}>
