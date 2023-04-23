@@ -3,6 +3,8 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
 export default function Login() {
+
+  
   return (
     <>
       <Container fluid="sm" style={{maxWidth:"900px"}}>
@@ -47,7 +49,7 @@ export default function Login() {
           </Row>
           <Button variant="primary">Login</Button>
           <small className="text-left mt-2 mb-2 d-block">
-            Don't have an account? <NavLink to="/register">register</NavLink>{" "}
+            Don't have an account? <NavLink to="/register" className="text-decoration-none">register</NavLink>{" "}
           </small>
         </Form>
       </Container>
