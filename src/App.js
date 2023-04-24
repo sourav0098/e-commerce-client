@@ -9,22 +9,25 @@ import NavbarMenu from "./components/NavbarMenu";
 import Footer from "./components/Footer";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import UserProvider from "./context/user.provider";
 
 const App = () => {
   return (
     <>
-      <NavbarMenu></NavbarMenu>
-      <Routes>
-        <Route path="/" element={<Index />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/register" element={<Register />}></Route>
-        <Route path="/products" element={<Products />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/contact" element={<Contact />}></Route>
-        <Route path="/cart" element={<Cart />}></Route>
-        <Route path="/services" element={<Services />}></Route>
-      </Routes>
-      <Footer></Footer>
+      <UserProvider>
+        <NavbarMenu></NavbarMenu>
+        <Routes>
+          <Route path="/" element={<Index />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/products" element={<Products />}></Route>
+          <Route path="/about" element={<About />}></Route>
+          <Route path="/contact" element={<Contact />}></Route>
+          <Route path="/cart" element={<Cart />}></Route>
+          <Route path="/services" element={<Services />}></Route>
+        </Routes>
+        <Footer></Footer>
+      </UserProvider>
     </>
   );
 };

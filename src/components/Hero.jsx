@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "../context/user.context";
 
 export default function Hero({ title, description, children }) {
+  // get user context
+  const userContext = useContext(UserContext);
+
   return (
     <>
       <Container className="pt-4 pb-4">
@@ -14,24 +18,29 @@ export default function Hero({ title, description, children }) {
           >
             <h1>{title}</h1>
             <p>{description}</p>
-            <div>
-              <Button
-                as={NavLink}
-                to="/login"
-                variant="primary"
-                className="me-2"
-              >
-                Login
-              </Button>
-              <Button
-                as={NavLink}
-                to="/register"
-                variant="outline-primary"
-                className="me-3"
-              >
-                Register
-              </Button>
-            </div>
+            {/* If user is logged in dont show login/register button otherwise show buttons  */}
+            {userContext.isLogin ? (
+              ""
+            ) : (
+              <div>
+                <Button
+                  as={NavLink}
+                  to="/login"
+                  variant="primary"
+                  className="me-2"
+                >
+                  Login
+                </Button>
+                <Button
+                  as={NavLink}
+                  to="/register"
+                  variant="outline-primary"
+                  className="me-3"
+                >
+                  Register
+                </Button>
+              </div>
+            )}
           </Col>
           <Col xs={12} md={6}>
             <img

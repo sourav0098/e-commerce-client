@@ -1,13 +1,82 @@
+import { useFormik } from "formik";
 import React from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
+import { loginSchema } from "./schema/login.schema";
+import { useState } from "react";
+import { loginUser } from "../services/user.service";
+import { toast } from "react-toastify";
+import { ROLES } from "../utils/roles";
+import { UserContext } from "../context/user.context";
+import { useContext } from "react";
 
 export default function Login() {
+  document.title = "Login | QuickPik";
 
-  
+  // Loading state for spinner
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  // user context
+  const userContext = useContext(UserContext);
+
+  // Formik hook
+  const { handleSubmit, handleChange, handleBlur, values, touched, errors } =
+    useFormik({
+      initialValues: {
+        email: "",
+        password: "",
+      },
+      validationSchema: loginSchema,
+      onSubmit: (values, actions) => {
+        //  Set loading state to true for spinner
+        setLoading(true);
+        loginUser(values)
+          .then((res) => {
+            //  reset form
+            actions.resetForm();
+
+            const tokens={
+              accessToken:res.accessToken,
+              refreshToken:res.refreshToken
+            }
+
+            //  set user data and login status in user context
+            userContext.doLogin(res.user, tokens);
+
+            // based on user role, redirect to dashboard or home page
+            // NORMAL USER -> home page
+            // ADMIN -> admin dashboard
+            res.user.roles.forEach((role) => {
+              if (role.roleName === ROLES.NORMAL) {
+                navigate("/");
+              }
+              if (role.roleName === ROLES.ADMIN) {
+                navigate("/admin/dashboard");
+              }
+            });
+          })
+          .catch((err) => {
+            // unauthorised login error
+            if (err.response.status === 401) {
+              toast.error(err.response.data.message);
+            } else {
+              toast.error("Something went wrong! Please try again later");
+            }
+          })
+          .finally(() => {
+            //  Set loading state to false for spinner
+            setLoading(false);
+          });
+      },
+    });
+
   return (
-    <>
-      <Container fluid="sm" style={{maxWidth:"900px"}}>
+    <div
+      style={{ display: "flex", minHeight: "70vh", flexDirection: "column" }}
+    >
+      <Container fluid="sm" style={{ maxWidth: "900px" }}>
         <Row>
           <Col className="text-center mt-3">
             <div>
@@ -34,25 +103,61 @@ export default function Login() {
             <h3>Login</h3>
           </Col>
         </Row>
-        <Form className="mt-2">
+        {/* Login Form */}
+        <Form noValidate className="mt-2" onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="email">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Email" autoComplete="on"/>
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                autoComplete="on"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                isInvalid={touched.email && !!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" autoComplete="on"/>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                autoComplete="on"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                isInvalid={touched.password && !!errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Button variant="primary">Login</Button>
+          <Button variant="primary" type="submit" disabled={loading}>
+            <Spinner
+              animation="border"
+              as="span"
+              size="sm"
+              className="me-2"
+              // loading state for register button
+              hidden={!loading}
+            ></Spinner>
+            <span>Login</span>
+          </Button>
           <small className="text-left mt-2 mb-2 d-block">
-            Don't have an account? <NavLink to="/register" className="text-decoration-none">register</NavLink>{" "}
+            Don't have an account?{" "}
+            <NavLink to="/register" className="text-decoration-none">
+              register
+            </NavLink>
           </small>
         </Form>
       </Container>
-    </>
+    </div>
   );
 }

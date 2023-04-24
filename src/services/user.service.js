@@ -9,3 +9,10 @@ export const registerUser = (data) => {
     return res.data;
   });
 };
+
+// Login user
+export const loginUser = (data) => {
+  return publicAxios.post(API_ENDPOINTS.LOGIN_USER, data).then((res) => {
+    return res.data;
+  });
+}

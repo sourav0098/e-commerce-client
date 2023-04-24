@@ -1,13 +1,30 @@
 import React, { useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useFormik } from "formik";
 import { registerSchema } from "./schema/register.schema";
 import { registerUser } from "../services/user.service";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  document.title = "Register | QuickPik";
+
+  const navigate = useNavigate();
+
+  // Server side validation error
   const [serverError, setServerError] = useState(null);
+
+  // Loading state for register button
+  const[loading, setLoading] = useState(false);
 
   const { handleSubmit, handleChange, handleBlur, values, touched, errors } =
     useFormik({
@@ -20,11 +37,13 @@ export default function Register() {
       },
       validationSchema: registerSchema,
       onSubmit: (values, actions) => {
+        //set loading to true for spinner
+        setLoading(true);
         registerUser(values)
-          .then((res) => {
-            console.log(res);
-            toast.success("User registered successfully!");
+          .then(() => {
+            toast.success("Registered successfully!");
             actions.resetForm();
+            navigate("/login");
           })
           .catch((err) => {
             if (
@@ -36,6 +55,10 @@ export default function Register() {
             } else {
               toast.error("Something went wrong!");
             }
+          })
+          .finally(() => {
+            //set loading to false for spinner
+            setLoading(false);
           });
       },
     });
@@ -173,11 +196,24 @@ export default function Register() {
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Button variant="primary" type="submit">
-            Register
+          {/* Register Button */}
+          {/* Disable button while loading and show spinner as well */}
+          <Button variant="primary" type="submit" disabled={loading}>
+            <Spinner
+              animation="border"
+              as="span"
+              size="sm"
+              className="me-2"
+              // loading state for register button
+              hidden={!loading}
+            ></Spinner>
+            <span>Register</span>
           </Button>
           <small className="text-left mt-2 mb-2 d-block">
-            Already have an account? <NavLink to="/login" className="text-decoration-none">login</NavLink>
+            Already have an account?{" "}
+            <NavLink to="/login" className="text-decoration-none">
+              login
+            </NavLink>
           </small>
         </Form>
       </Container>

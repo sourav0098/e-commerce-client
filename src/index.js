@@ -19,9 +19,10 @@ root.render(
         position="top-right"
         hideProgressBar={true}
         draggable
-        autoClose={3000}
+        autoClose={2500}
         closeOnClick
         pauseOnHover
+        theme= "colored"
       />
     </BrowserRouter>
   </React.StrictMode>

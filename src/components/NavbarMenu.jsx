@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "../context/user.context";
 
 const NavbarMenu = () => {
+  const userContext = useContext(UserContext);
+
+  // logout function
+  const doLogout = () => {
+    // remove user data and token from local storage and user context
+    userContext.doLogout(); 
+  };
+
   return (
     <>
-      <Navbar
-        collapseOnSelect
-        expand="lg"
-        className="bg-navbar"
-        variant="dark"
-      >
+      <Navbar collapseOnSelect expand="lg" className="bg-navbar" variant="dark">
         <Container>
           <Navbar.Brand className="p-0" as={NavLink} to="/">
             <div className="d-flex">
@@ -55,11 +59,28 @@ const NavbarMenu = () => {
               </Nav.Link>
             </Nav>
             <Nav>
-              <Nav.Link as={NavLink} to="/cart">
-                <i className="fa-solid fa-cart-shopping"></i> Cart
-              </Nav.Link>
-              <Nav.Link as={NavLink} to="/login">Login</Nav.Link>
-              <Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+              {userContext.isLogin ? (
+                <>
+                  <Nav.Link as={NavLink} to="/cart">
+                    <i className="fa-solid fa-cart-shopping"></i> Cart
+                  </Nav.Link>
+                  <Nav.Link onClick={doLogout}>
+                    Logout
+                  </Nav.Link>
+                  <Nav.Link as={NavLink} to="/profile">
+                    Hello, {userContext.userData.fname}
+                  </Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Nav.Link as={NavLink} to="/login">
+                    Login
+                  </Nav.Link>
+                  <Nav.Link as={NavLink} to="/register">
+                    Register
+                  </Nav.Link>
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
