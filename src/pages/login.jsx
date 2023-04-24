@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import { loginSchema } from "./schema/login.schema";
+import { loginSchema } from "../utils/schema/login.schema";
 import { useState } from "react";
 import { loginUser } from "../services/user.service";
 import { toast } from "react-toastify";
@@ -37,10 +37,10 @@ export default function Login() {
             //  reset form
             actions.resetForm();
 
-            const tokens={
-              accessToken:res.accessToken,
-              refreshToken:res.refreshToken
-            }
+            const tokens = {
+              accessToken: res.accessToken,
+              refreshToken: res.refreshToken,
+            };
 
             //  set user data and login status in user context
             userContext.doLogin(res.user, tokens);
