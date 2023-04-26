@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  document.title = "Register | QuickPik";
+  document.title = "QuickPik | Register";
 
   const navigate = useNavigate();
 

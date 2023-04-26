@@ -14,8 +14,4 @@ export const profileSchema = Yup.object().shape({
       "Please provide a valid 10 digit phone number"
     )
     .required("Please provide a phone number"),
-  address: Yup.string(),
-  city: Yup.string(),
-  province: Yup.string(),
-  postalCode: Yup.string()
 });

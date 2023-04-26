@@ -11,7 +11,7 @@ import { UserContext } from "../context/user.context";
 import { useContext } from "react";
 
 export default function Login() {
-  document.title = "Login | QuickPik";
+  document.title = "QuickPik | Login";
 
   // Loading state for spinner
   const [loading, setLoading] = useState(false);
