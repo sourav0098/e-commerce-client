@@ -1,6 +1,13 @@
 import React, { useContext } from "react";
 import { useState } from "react";
-import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { SideBar } from "../../components/SideBar";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import { useFormik } from "formik";
@@ -8,6 +15,8 @@ import { UserContext } from "../../context/user.context";
 import { profileSchema } from "../../utils/schema/profile.schema";
 import { useEffect } from "react";
 import { getUserById } from "../../services/user.service";
+import { toast } from "react-toastify";
+import { ImageUpload } from "../../components/ImageUpload";
 
 const Profile = () => {
   document.title = "QuickPik | Profile";
@@ -50,6 +59,8 @@ const Profile = () => {
     if (userContext.userData) {
       // get user id from context
       const userId = userContext.userData.userId;
+
+      // get user data from database
       getUserById(userId)
         .then((res) => {
           setUser(res);
@@ -69,6 +80,7 @@ const Profile = () => {
         })
         .catch((err) => {
           console.log(err);
+          toast.error("Error getting user data");
         });
     }
   }, [userContext.userData]);
@@ -87,6 +99,7 @@ const Profile = () => {
       fname: "",
       lname: "",
       phone: "",
+      image: "",
     },
     validationSchema: profileSchema,
     onSubmit: (values, actions) => {
@@ -129,144 +142,178 @@ const Profile = () => {
               <Spinner animation="border" as="span" size="lg"></Spinner>
             </div>
           ) : (
-            <Form noValidate onSubmit={handleSubmit}>
-              <Row>
-                <Form.Group as={Col} controlId="fname" md={6} className="mb-3">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="First Name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.fname}
-                    isInvalid={touched.fname && !!errors.fname}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.fname}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} controlId="lname" md={6} className="mb-3">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.lname}
-                    isInvalid={touched.lname && !!errors.lname}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.lname}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group as={Col} controlId="email" md={6} className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <p className="form-control mb-0 text-muted bg-light" disabled>
-                    {user.email}
-                  </p>
-                </Form.Group>
-                <Form.Group as={Col} controlId="phone" md={6} className="mb-3">
-                  <Form.Label>Phone</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Phone"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.phone}
-                    isInvalid={touched.phone && !!errors.phone}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.phone}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Row>
-              {/* Adding mapbox address autofill */}
-              <AddressAutofill
-                accessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                options={{
-                  country: "CA",
-                  language: "en",
-                }}
-              >
+            <>
+              {/* Image upload component */}
+              <ImageUpload />
+
+              {/* Profile Form */}
+              <Form noValidate onSubmit={handleSubmit}>
                 <Row>
                   <Form.Group
                     as={Col}
-                    controlId="address"
-                    md={12}
+                    controlId="fname"
+                    md={6}
                     className="mb-3"
                   >
-                    <Form.Label>Address</Form.Label>
+                    <Form.Label>First Name</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Address"
-                      autoComplete="address-line-1"
-                      value={address}
-                      onChange={handleAddressChange}
+                      placeholder="First Name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.fname}
+                      isInvalid={touched.fname && !!errors.fname}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.fname}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Form.Group
+                    as={Col}
+                    controlId="lname"
+                    md={6}
+                    className="mb-3"
+                  >
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Last Name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.lname}
+                      isInvalid={touched.lname && !!errors.lname}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.lname}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
                 <Row>
-                  <Form.Group as={Col} controlId="city" md={4} className="mb-3">
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="City"
-                      autoComplete="address-level2"
-                      value={city}
-                      onChange={handleCityChange}
-                    />
+                  <Form.Group
+                    as={Col}
+                    controlId="email"
+                    md={6}
+                    className="mb-3"
+                  >
+                    <Form.Label>Email</Form.Label>
+                    <p
+                      className="form-control mb-0 text-muted bg-light"
+                      disabled
+                    >
+                      {user.email}
+                    </p>
                   </Form.Group>
                   <Form.Group
                     as={Col}
-                    controlId="province"
-                    md={4}
+                    controlId="phone"
+                    md={6}
                     className="mb-3"
                   >
-                    <Form.Label>Province</Form.Label>
+                    <Form.Label>Phone</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Province"
-                      autoComplete="address-level1"
-                      value={province}
-                      onChange={handleProvinceChange}
+                      placeholder="Phone"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.phone}
+                      isInvalid={touched.phone && !!errors.phone}
                     />
-                  </Form.Group>
-                  <Form.Group
-                    as={Col}
-                    controlId="postalCode"
-                    md={4}
-                    className="mb-3"
-                  >
-                    <Form.Label>Postal Code</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Postal Code"
-                      autoComplete="postal-code"
-                      value={postalCode}
-                      onChange={handlePostalCodeChange}
-                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
-              </AddressAutofill>
-              <Button
-                variant="primary"
-                className="mb-3"
-                type="submit"
-                disabled={loading}
-              >
-                <Spinner
-                  animation="border"
-                  as="span"
-                  size="sm"
-                  className="me-2"
-                  // loading state for save button
-                  hidden={!loading}
-                ></Spinner>
-                <span>Save</span>
-              </Button>
-            </Form>
+                {/* Adding mapbox address autofill */}
+                <AddressAutofill
+                  accessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                  options={{
+                    country: "CA",
+                    language: "en",
+                  }}
+                >
+                  <Row>
+                    <Form.Group
+                      as={Col}
+                      controlId="address"
+                      md={12}
+                      className="mb-3"
+                    >
+                      <Form.Label>Address</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Address"
+                        autoComplete="address-line-1"
+                        value={address}
+                        onChange={handleAddressChange}
+                      />
+                    </Form.Group>
+                  </Row>
+                  <Row>
+                    <Form.Group
+                      as={Col}
+                      controlId="city"
+                      md={4}
+                      className="mb-3"
+                    >
+                      <Form.Label>City</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="City"
+                        autoComplete="address-level2"
+                        value={city}
+                        onChange={handleCityChange}
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      controlId="province"
+                      md={4}
+                      className="mb-3"
+                    >
+                      <Form.Label>Province</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Province"
+                        autoComplete="address-level1"
+                        value={province}
+                        onChange={handleProvinceChange}
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      as={Col}
+                      controlId="postalCode"
+                      md={4}
+                      className="mb-3"
+                    >
+                      <Form.Label>Postal Code</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Postal Code"
+                        autoComplete="postal-code"
+                        value={postalCode}
+                        onChange={handlePostalCodeChange}
+                      />
+                    </Form.Group>
+                  </Row>
+                </AddressAutofill>
+                <Button
+                  variant="primary"
+                  className="mb-3"
+                  type="submit"
+                  disabled={loading}
+                >
+                  <Spinner
+                    animation="border"
+                    as="span"
+                    size="sm"
+                    className="me-2"
+                    // loading state for save button
+                    hidden={!loading}
+                  ></Spinner>
+                  <span>Save</span>
+                </Button>
+              </Form>
+            </>
           )}
         </Container>
       </Container>
