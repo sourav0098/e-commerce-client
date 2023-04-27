@@ -31,3 +31,16 @@ export const getUserById = (userId) => {
       return res.data;
     });
 };
+
+export const updateUser = (userId, data) => {
+  const tokens = getTokenFromLocalStorage();
+  const headers = {
+    Authorization: `Bearer ${tokens.accessToken}`,
+  };
+
+  return publicAxios
+    .put(API_ENDPOINTS.USERS + "/" + userId, data, { headers })
+    .then((res) => {
+      return res.data;
+    });
+};

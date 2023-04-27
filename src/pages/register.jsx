@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useFormik } from "formik";
-import {registerSchema} from "../utils/schema/register.schema"
+import { registerSchema } from "../utils/schema/register.schema";
 import { registerUser } from "../services/user.service";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ export default function Register() {
   const [serverError, setServerError] = useState(null);
 
   // Loading state for register button
-  const[loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { handleSubmit, handleChange, handleBlur, values, touched, errors } =
     useFormik({
@@ -42,7 +42,11 @@ export default function Register() {
         registerUser(values)
           .then(() => {
             toast.success("Registered successfully!");
+            // reset server error
+            setServerError(null);
+            // reset form
             actions.resetForm();
+            // navigate to login page
             navigate("/login");
           })
           .catch((err) => {

@@ -9,11 +9,13 @@ export const PreviewImage = ({ file }) => {
   // Create a new FileReader instance to read the file
   const reader = new FileReader();
 
-  // Read the file and set the preview image
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    setPreviewImage(reader.result);
-  };
+  if (file != null) {
+    // Read the file and set the preview image
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setPreviewImage(reader.result);
+    };
+  }
 
   // Render the preview image
   return (

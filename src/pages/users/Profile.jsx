@@ -1,27 +1,21 @@
 import React, { useContext } from "react";
 import { useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Form,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { SideBar } from "../../components/SideBar";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import { useFormik } from "formik";
 import { UserContext } from "../../context/user.context";
 import { profileSchema } from "../../utils/schema/profile.schema";
 import { useEffect } from "react";
-import { getUserById } from "../../services/user.service";
+import { getUserById, updateUser } from "../../services/user.service";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../components/ImageUpload";
+import { getImageByUserId } from "../../services/image.service";
+import axios from "axios";
 
 const Profile = () => {
   document.title = "QuickPik | Profile";
-
-  const [user, setUser] = useState(null);
+  const userContext = useContext(UserContext);
 
   // state to show/hide sidebar
   const [show, setShow] = useState(false);
@@ -29,13 +23,19 @@ const Profile = () => {
   // Loading state for save button
   const [loading, setLoading] = useState(false);
 
+  const [user, setUser] = useState(null);
+
+  // Server side validation error
+  const [serverError, setServerError] = useState(null);
+
+  // state for image file
+  const [image, setImage] = useState(null);
+
   // state for address
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [postalCode, setPostalCode] = useState("");
-
-  const userContext = useContext(UserContext);
 
   // methods for handling address changes
   const handleAddressChange = (e) => {
@@ -56,6 +56,10 @@ const Profile = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
+    getUserFromServer();
+  }, [userContext.userData]);
+
+  const getUserFromServer = () => {
     if (userContext.userData) {
       // get user id from context
       const userId = userContext.userData.userId;
@@ -69,21 +73,52 @@ const Profile = () => {
           setValues({
             fname: res.fname,
             lname: res.lname,
-            phone: res.phone,
+            phone: res.phone == null ? "" : res.phone,
           });
 
           // setting the values of the address
-          setAddress(res.address);
-          setCity(res.city);
-          setProvince(res.province);
-          setPostalCode(res.postalCode);
+          res.address == null ? setAddress("") : setAddress(res.address);
+          res.city == null ? setCity("") : setCity(res.city);
+          res.province == null ? setProvince("") : setProvince(res.province);
+          res.postalCode == null
+            ? setPostalCode("")
+            : setPostalCode(res.postalCode);
+
+          // get the user's image if it exists for user otherwise set default image
+          if (res.image != null) {
+            getImageByUserId(userId)
+              .then((arrayBuffer) => {
+                const blob = new Blob([arrayBuffer], { type: "image/jpeg" }); // create a Blob object from the ArrayBuffer
+                const file = new File([blob], "image.jpg", {
+                  type: "image/jpeg",
+                }); // create a File object from the Blob
+                setImage(file); // set the File object as the value of the `image` state variable
+              })
+              .catch((error) => {
+                toast.error("Something went wrong! unable to get image");
+              });
+          } else {
+            // get default image in case user does not have an image
+            axios
+              .get("../assets/user-default.png", { responseType: "blob" })
+              .then((response) => {
+                const blob = response.data;
+                const file = new File([blob], "default.png", {
+                  type: "image/png",
+                });
+                setImage(file);
+              })
+              .catch((error) => {
+                toast.error("Something went wrong! unable to get image");
+              });
+          }
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Error getting user data");
+          toast.error("Something went wrong! Please try again later");
         });
     }
-  }, [userContext.userData]);
+  };
 
   // Formik form
   const {
@@ -107,12 +142,35 @@ const Profile = () => {
       // setLoading(true);
       const data = {
         ...values,
+        email: userContext.userData.email,
         address,
         city,
         province,
         postalCode: postalCode.replace(/\s+/g, ""), // removes all whitespace from postal code input
       };
-      console.log(data);
+
+      // update user data in database
+      setLoading(true);
+      updateUser(userContext.userData.userId, data)
+        .then((res) => {
+          // show success toast
+          toast.success("Profile updated successfully");
+          setServerError(null);
+
+          // get updated user data from server
+          getUserFromServer();
+        })
+        .catch((err) => {
+          if (err?.response?.data?.errors) {
+            setServerError(err.response.data.errors);
+            window.scrollTo(0, 0); // scroll to top of page
+          } else {
+            toast.error("Something went wrong! Please try again later");
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     },
   });
 
@@ -143,8 +201,28 @@ const Profile = () => {
             </div>
           ) : (
             <>
+              {/* server side validation alert */}
+              {serverError && (
+                <Row>
+                  <Col>
+                    {typeof serverError === "string" ? (
+                      <Alert variant="danger" className="p-2 mt-2">
+                        {serverError}
+                      </Alert>
+                    ) : (
+                      <Alert variant="danger" className="p-2 mt-2">
+                        <ul>
+                          {serverError.map((error) => (
+                            <li key={error}>{error}</li>
+                          ))}
+                        </ul>
+                      </Alert>
+                    )}
+                  </Col>
+                </Row>
+              )}
               {/* Image upload component */}
-              <ImageUpload />
+              {image == null ? "" : <ImageUpload image={image} />}
 
               {/* Profile Form */}
               <Form noValidate onSubmit={handleSubmit}>

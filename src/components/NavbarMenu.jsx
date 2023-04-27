@@ -3,16 +3,18 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user.context";
 
 const NavbarMenu = () => {
   const userContext = useContext(UserContext);
+  const navigate =useNavigate();
 
   // logout function
   const doLogout = () => {
     // remove user data and token from local storage and user context
     userContext.doLogout(); 
+    navigate("/login"); // redirect to login page
   };
 
   return (
