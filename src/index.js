@@ -19,7 +19,7 @@ root.render(
         position="top-right"
         hideProgressBar={true}
         draggable
-        autoClose={2500}
+        autoClose={2000}
         closeOnClick
         pauseOnHover
         theme= "colored"

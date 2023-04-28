@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SideBar } from "../../components/SideBar";
 import { Col, Container, Row } from "react-bootstrap";
 
-const AdminDashboard = () => {
+export const AddProduct = () => {
   // state to show/hide sidebar
   const [show, setShow] = useState(false);
 
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
                 style={{ cursor: "pointer" }}
                 onClick={handleShow}
               ></i>
-              Dashboard
+              Add Product
             </h2>
             <hr />
           </Col>
@@ -31,4 +31,3 @@ const AdminDashboard = () => {
     </>
   );
 };
-export default AdminDashboard;

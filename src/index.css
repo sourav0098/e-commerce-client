@@ -33,11 +33,15 @@
   border-right: 0 !important;
 }
 .sidebar-item:hover {
-  background: white !important;
-  color: black !important;
+  background-color: var(--primary-color-hover) !important;
 }
 
 .btn-close {
   opacity: 1 !important;
   filter: invert() !important;
+}
+
+.list-group-item.active {
+  background: white !important;
+  color: black !important;
 }

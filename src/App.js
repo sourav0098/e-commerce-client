@@ -13,6 +13,9 @@ import PrivateRoutes from "./components/auth/PrivateRoutes";
 import Profile from "./pages/users/Profile";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { ROLES } from "./utils/roles";
+import { AddCategory } from "./pages/admin/AddCategory";
+import { AddProduct } from "./pages/admin/AddProduct";
+import ViewCategories from "./pages/admin/ViewCategories";
 
 const App = () => {
   return (
@@ -41,6 +44,12 @@ const App = () => {
           {/* Routes only admin can access*/}
           <Route element={<PrivateRoutes allowedRole={[ROLES.ADMIN]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
+            <Route path="/admin/add-category" element={<AddCategory />}></Route>
+            <Route
+              path="/admin/categories"
+              element={<ViewCategories />}
+            ></Route>
+            <Route path="/admin/add-product" element={<AddProduct />}></Route>
           </Route>
         </Routes>
         <Footer></Footer>

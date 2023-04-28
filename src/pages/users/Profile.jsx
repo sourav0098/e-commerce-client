@@ -9,7 +9,7 @@ import { profileSchema } from "../../utils/schema/profile.schema";
 import { useEffect } from "react";
 import { getUserById, updateUser } from "../../services/user.service";
 import { toast } from "react-toastify";
-import { ImageUpload } from "../../components/ImageUpload";
+import { ImageUpload } from "../../components/users/ImageUpload";
 import { getImageByUserId } from "../../services/image.service";
 import axios from "axios";
 
@@ -114,7 +114,6 @@ const Profile = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
           toast.error("Something went wrong! Please try again later");
         });
     }
@@ -222,7 +221,7 @@ const Profile = () => {
                 </Row>
               )}
               {/* Image upload component */}
-              {image == null ? "" : <ImageUpload image={image} />}
+              {image == null ? "" : <ImageUpload image={image} userId={user.userId}/>}
 
               {/* Profile Form */}
               <Form noValidate onSubmit={handleSubmit}>

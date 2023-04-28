@@ -1,5 +1,4 @@
-import { getTokenFromLocalStorage } from "../auth/helper.auth";
-import { publicAxios } from "./axios.service";
+import { privateAxios, publicAxios } from "./axios.service";
 import { API_ENDPOINTS } from "./helper.service";
 
 // Login user
@@ -20,26 +19,16 @@ export const registerUser = (data) => {
 
 // Get user by ID
 export const getUserById = (userId) => {
-  const tokens = getTokenFromLocalStorage();
-  const headers = {
-    Authorization: `Bearer ${tokens.accessToken}`,
-  };
-
-  return publicAxios
-    .get(API_ENDPOINTS.USERS + "/" + userId, { headers })
+  return privateAxios
+    .get(API_ENDPOINTS.USERS + "/" + userId)
     .then((res) => {
       return res.data;
     });
 };
 
 export const updateUser = (userId, data) => {
-  const tokens = getTokenFromLocalStorage();
-  const headers = {
-    Authorization: `Bearer ${tokens.accessToken}`,
-  };
-
-  return publicAxios
-    .put(API_ENDPOINTS.USERS + "/" + userId, data, { headers })
+  return privateAxios
+    .put(API_ENDPOINTS.USERS + "/" + userId, data)
     .then((res) => {
       return res.data;
     });

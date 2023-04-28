@@ -3,4 +3,5 @@ export const API_ENDPOINTS = {
   LOGIN_USER: "/auth/login",
   USERS: "/users",
   USER_IMAGES:"/users/image",
+  CATEGORIES: "/categories",
 };
