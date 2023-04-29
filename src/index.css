@@ -9,7 +9,7 @@
   flex-direction: column;
 }
 
-.footer{
+.footer {
   margin-top: auto;
 }
 
@@ -54,4 +54,9 @@
 .list-group-item.active {
   background: white !important;
   color: black !important;
+}
+
+.input-group-text {
+  background: none !important;
+  border-radius: 0 7px 7px 0 !important;
 }

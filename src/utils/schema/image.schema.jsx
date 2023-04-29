@@ -11,7 +11,7 @@ export const imageSchema = Yup.object().shape({
     .test(
       "FILE_SIZE",
       "File size is too large (max 2MB)", // Custom error message for the validation rule
-      (value) => !value || (value && value.size <= 1024 * 1024) // Rule checks that file size is <= 2MB
+      (value) => !value || (value && value.size <= 2048 * 1024) // Rule checks that file size is <= 2MB
     )
     .test(
       "FILE_FORMAT",

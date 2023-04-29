@@ -83,7 +83,7 @@ export const SideBar = ({ show, handleClose }) => {
                 className="list-group-item sidebar-item"
               >
                 <i className="fa-solid fa-list me-2"></i>
-                <span>Categories</span>
+                <span>View Categories</span>
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
@@ -99,7 +99,7 @@ export const SideBar = ({ show, handleClose }) => {
                 className="list-group-item sidebar-item"
               >
                 <i className="fa-solid fa-boxes-stacked me-2"></i>
-                <span>Products</span>
+                <span>View Products</span>
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
