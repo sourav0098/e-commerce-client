@@ -3,6 +3,16 @@
   --primary-color-hover: #303d8c;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer{
+  margin-top: auto;
+}
+
 .bg-navbar {
   background-color: var(--primary-color) !important;
 }
