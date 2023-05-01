@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { SideBar } from "../../components/SideBar";
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 
 import {
+  Alert,
   Button,
   Col,
   Container,
@@ -15,15 +17,35 @@ import { productSchema } from "../../utils/schema/product.schema";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import {
+  addProductWithCategory,
+  addProductWithoutCategory,
+  uploadProductImage,
+} from "../../services/product.service";
+import { getCategories } from "../../services/categories.service";
 
 export const AddProduct = () => {
   // state to show/hide sidebar
   const [show, setShow] = useState(false);
 
+  // state to store categories
+  const [categories, setCategories] = useState([]);
+
+  // state to store selected category in which product will be added
+  const [selectedCategoryId, setSelectedCategoryId] = useState(undefined);
+
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState(null);
 
   // reference to the hidden image input element
   const imageRef = useRef(null);
+
+  // reference to the rich text editor
+  const editorRef = useRef(null);
+  // const log = () => {
+  //   if (editorRef.current) {
+  //     console.log(editorRef.current.getContent());
+  //   }
 
   // state to store the preview image
   const [previewImage, setPreviewImage] = useState(null);
@@ -31,6 +53,18 @@ export const AddProduct = () => {
   // methods for sidebar
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // fetch categories
+  useEffect(() => {
+    getCategories(0, 100)
+      .then((data) => {
+        setCategories(data.content);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something went wrong! Unable to fetch categories");
+      });
+  }, []);
 
   // Create a new FileReader instance to read the file
   const reader = new FileReader();
@@ -40,6 +74,7 @@ export const AddProduct = () => {
     handleChange,
     handleBlur,
     setFieldValue,
+    setFieldTouched,
     values,
     touched,
     errors,
@@ -52,15 +87,84 @@ export const AddProduct = () => {
       quantity: "",
       description: "",
       productImage: null,
-      isLive: false,
-      isStock: false,
+      live: true,
+      stock: true,
     },
     validationSchema: productSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values, actions) => {
+      const { productImage, ...product } = values;
+      setLoading(true);
+      if (selectedCategoryId === "none") {
+        // add product without category
+        addProductWithoutCategory(product)
+          .then((data) => {
+            toast.success("Product added successfully");
+            if (productImage != null && productImage.name !== "default.png") {
+              // upload image for product
+              uploadProductImage(productImage, data.productId)
+                .then((data) => {
+                  toast.success("Product image uploaded successfully");
+                })
+                .catch((err) => {
+                  console.log(err.response?.data);
+                  toast.error("Something went wrong! Unable to upload image");
+                });
+            }
+            actions.resetForm();
+            editorRef.current.setContent("");
+          })
+          .catch((err) => {
+            // server validation errors
+            if (err?.response?.data?.message) {
+              setServerError(err.response.data.message);
+            } else if (err?.response?.data?.errors) {
+              setServerError(err.response.data.errors);
+            } else {
+              toast.error("Something went wrong!");
+            }
+            window.scrollTo(0, 0); // scroll to top of page
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        // add product with category
+        addProductWithCategory(product, selectedCategoryId)
+          .then((data) => {
+            toast.success("Product added successfully");
+            if (productImage != null && productImage.name !== "default.png") {
+              // upload image for product
+              uploadProductImage(productImage, data.productId)
+                .then((data) => {
+                  console.log(data);
+                  toast.success("Product image uploaded successfully");
+                })
+                .catch((err) => {
+                  toast.error("Something went wrong! Unable to upload image");
+                });
+            }
+            actions.resetForm();
+            editorRef.current.setContent("");
+          })
+          .catch((err) => {
+            // server validation errors
+            if (err?.response?.data?.message) {
+              setServerError(err.response.data.message);
+            } else if (err?.response?.data?.errors) {
+              setServerError(err.response.data.errors);
+            } else {
+              toast.error("Something went wrong!");
+            }
+            window.scrollTo(0, 0); // scroll to top of page
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     },
   });
 
+  // set default image for product
   useEffect(() => {
     axios
       .get("../assets/product-default.png", { responseType: "blob" })
@@ -72,9 +176,11 @@ export const AddProduct = () => {
         setFieldValue("productImage", file);
       })
       .catch(() => {
-        toast.error("Something went wrong! unable to get default product image");
+        toast.error(
+          "Something went wrong! unable to get default product image"
+        );
       });
-  },[]);
+  }, []);
 
   // Check if the image is not null and read the file
   if (values.productImage !== null) {
@@ -102,6 +208,26 @@ export const AddProduct = () => {
           </Col>
         </Row>
         <Container>
+          {/* server side validation alert */}
+          {serverError && (
+            <Row>
+              <Col>
+                {typeof serverError === "string" ? (
+                  <Alert variant="danger" className="p-2 mt-2">
+                    {serverError}
+                  </Alert>
+                ) : (
+                  <Alert variant="danger" className="p-2 mt-2">
+                    <ul>
+                      {serverError.map((error) => (
+                        <li key={error}>{error}</li>
+                      ))}
+                    </ul>
+                  </Alert>
+                )}
+              </Col>
+            </Row>
+          )}
           <Form noValidate onSubmit={handleSubmit}>
             <Row>
               <Col className="mb-3">
@@ -145,6 +271,34 @@ export const AddProduct = () => {
                   Choose Product Image
                 </Button>
               </Col>
+            </Row>
+            <Row>
+              {/* Product Category */}
+              <Form.Group as={Col} controlId="category" md={6} className="mb-3">
+                <Form.Label>Product Category</Form.Label>
+                <Form.Select
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                  value={selectedCategoryId}
+                >
+                  {categories ? (
+                    <>
+                      {/* Show category options */}
+                      {categories.map((category) => {
+                        return (
+                          <option
+                            key={category.categoryId}
+                            value={category.categoryId}
+                          >
+                            {category.categoryTitle}
+                          </option>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <option value="none">None</option>
+                  )}
+                </Form.Select>
+              </Form.Group>
             </Row>
             <Row>
               <Form.Group as={Col} controlId="brand" md={6} className="mb-3">
@@ -247,40 +401,109 @@ export const AddProduct = () => {
                 className="mb-3"
               >
                 <Form.Label>Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  as="textarea"
-                  placeholder="Provide a clear and concise description of your product"
-                  rows={5}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.description}
-                  isInvalid={touched.description && !!errors.description}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.description}
-                </Form.Control.Feedback>
+                <Editor
+                  apiKey={process.env.REACT_APP_TINYMCE_KEY}
+                  onInit={(evt, editor) => (editorRef.current = editor)}
+                  init={{
+                    selector: "textarea#basic-example",
+                    icons: "bootstrap",
+                    skin: "bootstrap",
+                    plugins: [
+                      "advlist",
+                      "autolink",
+                      "lists",
+                      "link",
+                      "charmap",
+                      "preview",
+                      "anchor",
+                      "searchreplace",
+                      "visualblocks",
+                      "code",
+                      "fullscreen",
+                      "insertdatetime",
+                      "table",
+                      "help",
+                      "wordcount",
+                    ],
+                    browser_spellcheck: true,
+                    menu: {
+                      file: {
+                        title: "File",
+                        items: "newdocument | preview ",
+                      },
+                      edit: {
+                        title: "Edit",
+                        items:
+                          "undo redo | cut copy paste pastetext | selectall | searchreplace",
+                      },
+                      view: {
+                        title: "View",
+                        items:
+                          "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments",
+                      },
+                      insert: {
+                        title: "Insert",
+                        items:
+                          "link addcomment pageembed inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
+                      },
+                      format: {
+                        title: "Format",
+                        items:
+                          "bold italic underline strikethrough superscript subscript codeformat | styles blocks fontsize align lineheight | forecolor backcolor | removeformat",
+                      },
+                      tools: {
+                        title: "Tools",
+                        items: "wordcount",
+                      },
+                      table: {
+                        title: "Table",
+                        items:
+                          "inserttable | cell row column | advtablesort | tableprops deletetable",
+                      },
+                      help: { title: "Help", items: "help" },
+                    },
+                    toolbar:
+                      "undo redo | bold italic underline strikethrough | fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | template codesample | ltr rtl",
+                    toolbar_sticky: true,
+                    autosave_interval: "30s",
+                    content_style: `
+                      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+                      body { font-family: 'Roboto', sans-serif; }`,
+                  }}
+                  // value={values.description}
+                  onEditorChange={(e) => {
+                    handleChange({ target: { name: "description", value: e } });
+                  }}
+                  onBlur={() => setFieldTouched("description", true)}
+                ></Editor>
+                {touched.description && errors.description && (
+                  <div className="text-danger" style={{ fontSize: "0.875rem" }}>
+                    {errors.description}
+                  </div>
+                )}
               </Form.Group>
             </Row>
             <Row>
               <Form.Group as={Col} md={2} className="mb-3">
                 <Form.Check
                   type="switch"
-                  id="isLive"
+                  id="live"
                   label="Live"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.isLive}
+                  value={values.live}
+                  checked={values.live}
                 />
               </Form.Group>
               <Form.Group as={Col} md={2} className="mb-3">
                 <Form.Check
                   type="switch"
-                  id="isStock"
+                  id="stock"
                   label="In Stock"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.isStock}
+                  value={values.stock}
+                  checked={values.stock}
                 />
               </Form.Group>
             </Row>

@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { getUserById, updateUser } from "../../services/user.service";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../components/users/ImageUpload";
-import { getImageByUserId } from "../../services/image.service";
+import { getImageByUserId } from "../../services/user.service";
 import axios from "axios";
 
 const Profile = () => {

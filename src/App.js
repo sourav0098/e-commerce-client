@@ -16,6 +16,7 @@ import { ROLES } from "./utils/roles";
 import { AddCategory } from "./pages/admin/AddCategory";
 import { AddProduct } from "./pages/admin/AddProduct";
 import ViewCategories from "./pages/admin/ViewCategories";
+import ViewProducts from "./pages/admin/ViewProducts";
 
 const App = () => {
   return (
@@ -45,11 +46,9 @@ const App = () => {
           <Route element={<PrivateRoutes allowedRole={[ROLES.ADMIN]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
             <Route path="/admin/add-category" element={<AddCategory />}></Route>
-            <Route
-              path="/admin/categories"
-              element={<ViewCategories />}
-            ></Route>
+            <Route path="/admin/categories" element={<ViewCategories />}></Route>
             <Route path="/admin/add-product" element={<AddProduct />}></Route>
+            <Route path="/admin/products" element={<ViewProducts />}></Route>
           </Route>
         </Routes>
         <Footer></Footer>

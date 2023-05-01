@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { imageSchema } from "../../utils/schema/image.schema";
 import { useEffect } from "react";
-import { uploadImage } from "../../services/image.service";
+import { uploadImage } from "../../services/user.service";
 import { toast } from "react-toastify";
 
 export const ImageUpload = (props) => {

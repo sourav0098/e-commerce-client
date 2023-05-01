@@ -44,10 +44,10 @@ export const productSchema = Yup.object().shape({
     .integer("Stock Quantity should be a whole number")
     .typeError("Stock Quantity should be a whole number"),
   description: Yup.string()
-    .min(10, "Please provide a description of atleast 10 characters")
+    .min(10, "Please provide a valid description of atleast 10 characters")
     .required("Please provide a description"),
-  isLive: Yup.boolean(),
-  isStock: Yup.boolean(),
+  live: Yup.boolean(),
+  stock: Yup.boolean(),
   productImage: Yup.mixed()
     .nullable()
     .required("Please select an image") // Field is required

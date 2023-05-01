@@ -19,16 +19,41 @@ export const registerUser = (data) => {
 
 // Get user by ID
 export const getUserById = (userId) => {
-  return privateAxios
-    .get(API_ENDPOINTS.USERS + "/" + userId)
-    .then((res) => {
-      return res.data;
-    });
+  return privateAxios.get(API_ENDPOINTS.USERS + "/" + userId).then((res) => {
+    return res.data;
+  });
 };
 
 export const updateUser = (userId, data) => {
   return privateAxios
     .put(API_ENDPOINTS.USERS + "/" + userId, data)
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// Get user image by ID
+export const getImageByUserId = (userId) => {
+  return publicAxios
+    .get(API_ENDPOINTS.USER_IMAGES + "/" + userId, {
+      responseType: "arraybuffer", // Set the responseType to 'arraybuffer'
+    })
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// upload user image
+export const uploadImage = (image, userId) => {
+  if (image == null) {
+    return;
+  }
+
+  const data = new FormData();
+  data.append("image", image);
+
+  return privateAxios
+    .post(API_ENDPOINTS.USER_IMAGES + "/" + userId, data)
     .then((res) => {
       return res.data;
     });
