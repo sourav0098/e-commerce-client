@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SideBar } from "../../components/SideBar";
 import { Editor } from "@tinymce/tinymce-react";
 import {
+  Alert,
   Button,
   Col,
   Container,
@@ -17,6 +18,7 @@ import { useEffect } from "react";
 import {
   getImageByProductId,
   getProducts,
+  searchProducts,
   updateProduct,
   updateProductCategory,
   uploadProductImage,
@@ -49,6 +51,12 @@ const ViewProducts = () => {
 
   // state for categories
   const [categories, setCategories] = useState(null);
+
+  // search products
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // state for previous products when searching
+  const [previousProducts, setPreviousProducts] = useState(null);
 
   // state for selected product in product view modal
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -99,6 +107,28 @@ const ViewProducts = () => {
       });
   };
 
+  // search product
+  const searchProduct = (e) => {
+    e.preventDefault();
+    if (searchQuery === undefined || searchQuery.trim() === "") {
+      return;
+    } else {
+      // call server api to search product
+      searchProducts(searchQuery)
+        .then((data) => {
+          if (data.content.length <= 0) {
+            toast.info("No results found!");
+          }
+          setPreviousProducts(products);
+          setProducts(data);
+        })
+        .catch((err) => {
+          toast.error("Something went wrong! Unable to search products");
+        })
+        .finally(() => {});
+    }
+  };
+
   // product view modal
   const ProductViewModal = () => {
     // reference to the rich text editor
@@ -109,6 +139,9 @@ const ViewProducts = () => {
 
     // state to store the preview image
     const [previewImage, setPreviewImage] = useState(null);
+
+    // Server side validation error
+    const [serverError, setServerError] = useState(null);
 
     // state to store selected category id
     const [selectedCategoryChangeId, setSelectedCategoryChangeId] =
@@ -126,6 +159,7 @@ const ViewProducts = () => {
         uploadProductImage(values.image, selectedProduct?.productId)
           .then(() => {
             toast.success("Product image updated successfully");
+            handleProductViewClose();
           })
           .catch((err) => {
             toast.error("Something went wrong! Unable to update image");
@@ -196,11 +230,30 @@ const ViewProducts = () => {
                   toast.error(
                     "Something went wrong! Unable to update category"
                   );
+                  // server validation errors
+                  if (err?.response?.data?.message) {
+                    setServerError(err.response.data.message);
+                  } else if (err?.response?.data?.errors) {
+                    setServerError(err.response.data.errors);
+                  } else {
+                    toast.error(
+                      "Something went wrong! Unable to update category"
+                    );
+                  }
+                  window.scrollTo(0, 0); // scroll to top of page
                 });
             }
           })
           .catch((err) => {
-            console.log(err.response.data);
+            // server validation errors
+            if (err?.response?.data?.message) {
+              setServerError(err.response.data.message);
+            } else if (err?.response?.data?.errors) {
+              setServerError(err.response.data.errors);
+            } else {
+              toast.error("Something went wrong! Unable to update product");
+            }
+            window.scrollTo(0, 0); // scroll to top of page
           })
           .finally(() => {
             setLoading(false);
@@ -209,6 +262,7 @@ const ViewProducts = () => {
       },
     });
 
+    // handle image selection
     const handleImageSelection = (e) => {
       const file = e.target.files[0];
       imageFormik.setFieldValue("image", file);
@@ -244,6 +298,7 @@ const ViewProducts = () => {
     }, []);
 
     return (
+      //  Modal for product view
       selectedProduct && (
         <>
           <Modal
@@ -255,6 +310,27 @@ const ViewProducts = () => {
               <Modal.Title>Product</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+              {/* server side validation alert */}
+              {serverError && (
+                <Row>
+                  <Col>
+                    {typeof serverError === "string" ? (
+                      <Alert variant="danger" className="p-2 mt-2">
+                        {serverError}
+                      </Alert>
+                    ) : (
+                      <Alert variant="danger" className="p-2 mt-2">
+                        <ul>
+                          {serverError.map((error) => (
+                            <li key={error}>{error}</li>
+                          ))}
+                        </ul>
+                      </Alert>
+                    )}
+                  </Col>
+                </Row>
+              )}
+
               {/* Image form */}
               <Form noValidate onSubmit={imageFormik.handleSubmit}>
                 <Row>
@@ -270,7 +346,7 @@ const ViewProducts = () => {
                             alt="Profile"
                             width="200px"
                             height="200px"
-                            style={{ objectFit: "cover", borderRadius: "50%" }}
+                            style={{ objectFit: "cover", borderRadius: "2%" }}
                           />
                         )}
                       </div>
@@ -614,9 +690,28 @@ const ViewProducts = () => {
             {/* Search Bar */}
             <Row>
               <Col md={4}>
-                <Form.Group as={Col} className="mb-3">
-                  <Form.Control type="text" placeholder="Search" />
-                </Form.Group>
+                <Form onSubmit={searchProduct}>
+                  <Form.Group as={Col} className="mb-3">
+                    <InputGroup>
+                      <Form.Control
+                        type="text"
+                        placeholder="Search Product"
+                        onChange={(e) => {
+                          if (e.target.value.trim() === "") {
+                            setSearchQuery("");
+                            setProducts(previousProducts);
+                          } else {
+                            setSearchQuery(e.target.value);
+                          }
+                        }}
+                        value={searchQuery}
+                      />
+                      <Button variant="primary" type="submit">
+                        Search
+                      </Button>
+                    </InputGroup>
+                  </Form.Group>
+                </Form>
               </Col>
               <Row className="mb-3">
                 <Col md={3}>

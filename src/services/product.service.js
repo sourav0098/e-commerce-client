@@ -84,7 +84,23 @@ export const updateProductDetails = (product, productId) => {
 // update category of product
 export const updateProductCategory = (categoryId, productId) => {
   return privateAxios
-    .put(API_ENDPOINTS.CATEGORIES + "/" + categoryId + API_ENDPOINTS.PRODUCTS + "/" + productId)
+    .put(
+      API_ENDPOINTS.CATEGORIES +
+        "/" +
+        categoryId +
+        API_ENDPOINTS.PRODUCTS +
+        "/" +
+        productId
+    )
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// search products by product name
+export const searchProducts = (productName) => {
+  return publicAxios
+    .get(API_ENDPOINTS.PRODUCTS + "/search/" + productName)
     .then((res) => {
       return res.data;
     });
