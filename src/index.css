@@ -60,3 +60,20 @@
   background: none !important;
   border-radius: 0 7px 7px 0 !important;
 }
+
+.bg-success-table {
+  color: #c8ded4 !important;
+}
+.bg-warning-table {
+  color: #e9dfbe;
+}
+.bg-danger-table {
+  color: #e9cbcd;
+}
+.bg-secondary-table {
+  color: #d6d8db;
+}
+
+.page-item.active .page-link{
+  background-color: var(--primary-color) !important;
+}

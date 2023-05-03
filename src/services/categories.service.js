@@ -1,10 +1,14 @@
-import { privateAxios } from "./axios.service";
+import { privateAxios, publicAxios } from "./axios.service";
 import { API_ENDPOINTS } from "./helper.service";
 
-export const getCategories = (currentPage=0, pageSize=8) => {
-  return privateAxios.get(`${API_ENDPOINTS.CATEGORIES}?pageNumber=${currentPage}&pageSize=${pageSize}`).then((res) => {
-    return res.data;
-  });
+export const getCategories = (currentPage = 0, pageSize = API_ENDPOINTS.CATEGORY_PAGE_SIZE) => {
+  return publicAxios
+    .get(
+      `${API_ENDPOINTS.CATEGORIES}?pageNumber=${currentPage}&pageSize=${pageSize}`
+    )
+    .then((res) => {
+      return res.data;
+    });
 };
 
 export const addCategory = (data) => {

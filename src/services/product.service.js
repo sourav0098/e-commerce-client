@@ -1,5 +1,21 @@
 import { API_ENDPOINTS } from "./helper.service";
-import { privateAxios } from "./axios.service";
+import { privateAxios, publicAxios } from "./axios.service";
+
+// get products
+export const getProducts = (
+  pageNumber,
+  pageSize = API_ENDPOINTS.PRODUCT_PAGE_SIZE,
+  sortBy = "createdAt",
+  sortDir = "asc"
+) => {
+  return publicAxios
+    .get(
+      `${API_ENDPOINTS.PRODUCTS}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+    )
+    .then((res) => {
+      return res.data;
+    });
+};
 
 // create a new product without category
 export const addProductWithoutCategory = (product) => {
@@ -20,6 +36,26 @@ export const addProductWithCategory = (product, categoryId) => {
     });
 };
 
+// update product
+export const updateProduct = (product, productId) => {
+  return privateAxios
+    .put(API_ENDPOINTS.PRODUCTS + "/" + productId, product)
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// get product image
+export const getImageByProductId = (productId) => {
+  return publicAxios
+    .get(API_ENDPOINTS.PRODUCT_IMAGES + "/" + productId, {
+      responseType: "arraybuffer", // Set the responseType to 'arraybuffer'
+    })
+    .then((res) => {
+      return res.data;
+    });
+};
+
 // upload product image
 export const uploadProductImage = (productImage, productId) => {
   if (productImage == null) {
@@ -31,6 +67,24 @@ export const uploadProductImage = (productImage, productId) => {
 
   return privateAxios
     .post(API_ENDPOINTS.PRODUCT_IMAGES + "/" + productId, data)
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// update product details
+export const updateProductDetails = (product, productId) => {
+  return privateAxios
+    .put(API_ENDPOINTS.PRODUCTS + "/" + productId, product)
+    .then((res) => {
+      return res.data;
+    });
+};
+
+// update category of product
+export const updateProductCategory = (categoryId, productId) => {
+  return privateAxios
+    .put(API_ENDPOINTS.CATEGORIES + "/" + categoryId + API_ENDPOINTS.PRODUCTS + "/" + productId)
     .then((res) => {
       return res.data;
     });

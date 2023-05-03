@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { SideBar } from "../../components/SideBar";
 import { Editor } from "@tinymce/tinymce-react";
-import axios from "axios";
 
 import {
   Alert,
@@ -42,10 +41,6 @@ export const AddProduct = () => {
 
   // reference to the rich text editor
   const editorRef = useRef(null);
-  // const log = () => {
-  //   if (editorRef.current) {
-  //     console.log(editorRef.current.getContent());
-  //   }
 
   // state to store the preview image
   const [previewImage, setPreviewImage] = useState(null);
@@ -61,7 +56,6 @@ export const AddProduct = () => {
         setCategories(data.content);
       })
       .catch((err) => {
-        console.log(err);
         toast.error("Something went wrong! Unable to fetch categories");
       });
   }, []);
@@ -112,6 +106,7 @@ export const AddProduct = () => {
             }
             actions.resetForm();
             editorRef.current.setContent("");
+            setPreviewImage(null);
           })
           .catch((err) => {
             // server validation errors
@@ -132,17 +127,17 @@ export const AddProduct = () => {
         addProductWithCategory(product, selectedCategoryId)
           .then((data) => {
             toast.success("Product added successfully");
-            if (productImage != null && productImage.name !== "default.png") {
+            if (productImage != null) {
               // upload image for product
               uploadProductImage(productImage, data.productId)
                 .then((data) => {
-                  console.log(data);
                   toast.success("Product image uploaded successfully");
                 })
                 .catch((err) => {
                   toast.error("Something went wrong! Unable to upload image");
                 });
             }
+            // reset form and editor
             actions.resetForm();
             editorRef.current.setContent("");
           })
@@ -163,24 +158,6 @@ export const AddProduct = () => {
       }
     },
   });
-
-  // set default image for product
-  useEffect(() => {
-    axios
-      .get("../assets/product-default.png", { responseType: "blob" })
-      .then((response) => {
-        const blob = response.data;
-        const file = new File([blob], "default.png", {
-          type: "image/png",
-        });
-        setFieldValue("productImage", file);
-      })
-      .catch(() => {
-        toast.error(
-          "Something went wrong! unable to get default product image"
-        );
-      });
-  }, []);
 
   // Check if the image is not null and read the file
   if (values.productImage !== null) {
@@ -234,13 +211,17 @@ export const AddProduct = () => {
                 <Form.Group controlId="formFile" className="mb-3">
                   {/* Image */}
                   <div>
-                    <img
-                      src={previewImage}
-                      alt="Profile"
-                      width="200px"
-                      height="200px"
-                      style={{ objectFit: "cover", borderRadius: "4%" }}
-                    />
+                    {previewImage === null ? (
+                      <i className="fa-regular fa-image fs-1 ms-1"></i>
+                    ) : (
+                      <img
+                        src={previewImage}
+                        alt="Profile"
+                        width="200px"
+                        height="200px"
+                        style={{ objectFit: "cover", borderRadius: "4%" }}
+                      />
+                    )}
                   </div>
 
                   {/* Hidden Image input */}
@@ -407,7 +388,6 @@ export const AddProduct = () => {
                   init={{
                     selector: "textarea#basic-example",
                     icons: "bootstrap",
-                    skin: "bootstrap",
                     plugins: [
                       "advlist",
                       "autolink",
@@ -418,57 +398,16 @@ export const AddProduct = () => {
                       "anchor",
                       "searchreplace",
                       "visualblocks",
-                      "code",
                       "fullscreen",
                       "insertdatetime",
                       "table",
                       "help",
-                      "wordcount",
                     ],
                     browser_spellcheck: true,
-                    menu: {
-                      file: {
-                        title: "File",
-                        items: "newdocument | preview ",
-                      },
-                      edit: {
-                        title: "Edit",
-                        items:
-                          "undo redo | cut copy paste pastetext | selectall | searchreplace",
-                      },
-                      view: {
-                        title: "View",
-                        items:
-                          "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments",
-                      },
-                      insert: {
-                        title: "Insert",
-                        items:
-                          "link addcomment pageembed inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
-                      },
-                      format: {
-                        title: "Format",
-                        items:
-                          "bold italic underline strikethrough superscript subscript codeformat | styles blocks fontsize align lineheight | forecolor backcolor | removeformat",
-                      },
-                      tools: {
-                        title: "Tools",
-                        items: "wordcount",
-                      },
-                      table: {
-                        title: "Table",
-                        items:
-                          "inserttable | cell row column | advtablesort | tableprops deletetable",
-                      },
-                      help: { title: "Help", items: "help" },
-                    },
-                    toolbar:
-                      "undo redo | bold italic underline strikethrough | fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | template codesample | ltr rtl",
-                    toolbar_sticky: true,
                     autosave_interval: "30s",
                     content_style: `
-                      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-                      body { font-family: 'Roboto', sans-serif; }`,
+                        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+                        body { font-family: 'Roboto', sans-serif; }`,
                   }}
                   // value={values.description}
                   onEditorChange={(e) => {

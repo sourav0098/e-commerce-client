@@ -19,7 +19,7 @@ export const registerUser = (data) => {
 
 // Get user by ID
 export const getUserById = (userId) => {
-  return privateAxios.get(API_ENDPOINTS.USERS + "/" + userId).then((res) => {
+  return publicAxios.get(API_ENDPOINTS.USERS + "/" + userId).then((res) => {
     return res.data;
   });
 };
