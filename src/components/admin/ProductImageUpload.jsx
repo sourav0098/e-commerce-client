@@ -4,11 +4,9 @@ import { useRef } from "react";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { imageSchema } from "../../utils/schema/image.schema";
 import { useEffect } from "react";
-import { uploadImage } from "../../services/user.service";
-import { toast } from "react-toastify";
 import { IKContext, IKImage } from "imagekitio-react";
 
-export const ImageUpload = (props) => {
+export const ProductImageUpload = (props) => {
   const [loading, setLoading] = useState(false);
 
   // reference to the hidden image input element
@@ -23,25 +21,17 @@ export const ImageUpload = (props) => {
       image: null,
     },
     validationSchema: imageSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: (values) => {
       // update image by calling the API
       setLoading(true);
-      uploadImage(values.image, props.userId)
-        .then((res) => {
-          toast.success("Image updated successfully");
-          setPreviewImage(res.message);
-          actions.resetForm();
-        })
-        .catch((err) => {
-          toast.error("Error updating image");
-        })
+      props
+        .handleUploadProductImage(values.image, props.productId)
+        .then(() => {})
         .finally(() => {
           setLoading(false);
         });
     },
   });
-
-  // Create a new FileReader instance to read the file
 
   useEffect(() => {
     if (props.image !== null && typeof props.image == "object") {
@@ -94,13 +84,14 @@ export const ImageUpload = (props) => {
                       publicKey={process.env.REACT_APP_IMAGE_KIT_PUBLIC_KEY}
                     >
                       <IKImage
-                        path={`/users/${previewImage}`}
+                        path={`/products/${previewImage}`}
                         transformation={[
                           {
                             height: 400,
                             width: 400,
                           },
                         ]}
+                        loading="lazy"
                         width="200px"
                         height="200px"
                         style={{ objectFit: "cover", borderRadius: "50%" }}

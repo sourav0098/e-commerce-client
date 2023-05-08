@@ -35,9 +35,7 @@ export const updateUser = (userId, data) => {
 // Get user image by ID
 export const getImageByUserId = (userId) => {
   return publicAxios
-    .get(API_ENDPOINTS.USER_IMAGES + "/" + userId, {
-      responseType: "arraybuffer", // Set the responseType to 'arraybuffer'
-    })
+    .get(API_ENDPOINTS.USER_IMAGES + "/" + userId)
     .then((res) => {
       return res.data;
     });

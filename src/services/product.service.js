@@ -63,7 +63,7 @@ export const uploadProductImage = (productImage, productId) => {
   }
 
   const data = new FormData();
-  data.append("productImage", productImage);
+  data.append("image", productImage);
 
   return privateAxios
     .post(API_ENDPOINTS.PRODUCT_IMAGES + "/" + productId, data)

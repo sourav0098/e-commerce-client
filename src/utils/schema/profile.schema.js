@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { REGEX_VALIDATIONS } from "../../utils/regex";
+import { REGEX_VALIDATIONS } from "../regex";
 
 export const profileSchema = Yup.object().shape({
   fname: Yup.string()

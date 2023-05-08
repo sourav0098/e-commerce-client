@@ -12,7 +12,6 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { productSchema } from "../../utils/schema/product.schema";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
@@ -22,8 +21,11 @@ import {
   uploadProductImage,
 } from "../../services/product.service";
 import { getCategories } from "../../services/categories.service";
+import { productWithFileSchema } from "../../utils/schema/productWithFile.schema";
 
 export const AddProduct = () => {
+  document.title = "QuickPik | Add Product";
+
   // state to show/hide sidebar
   const [show, setShow] = useState(false);
 
@@ -84,7 +86,7 @@ export const AddProduct = () => {
       live: true,
       stock: true,
     },
-    validationSchema: productSchema,
+    validationSchema: productWithFileSchema,
     onSubmit: (values, actions) => {
       const { productImage, ...product } = values;
       setLoading(true);
@@ -100,7 +102,6 @@ export const AddProduct = () => {
                   toast.success("Product image uploaded successfully");
                 })
                 .catch((err) => {
-                  console.log(err.response?.data);
                   toast.error("Something went wrong! Unable to upload image");
                 });
             }

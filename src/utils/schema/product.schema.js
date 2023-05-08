@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const productWithoutFileSchema = Yup.object().shape({
+export const productSchema = Yup.object().shape({
   brand: Yup.string().required("Please provide a brand name"),
   title: Yup.string()
     .min(2, "Please provide a valid product name of atleast 2 characters")
@@ -45,5 +45,4 @@ export const productWithoutFileSchema = Yup.object().shape({
     .required("Please provide a description"),
   live: Yup.boolean(),
   stock: Yup.boolean(),
-  productImage: Yup.string().nullable(),
 });

@@ -16,7 +16,6 @@ import {
 } from "react-bootstrap";
 import { useEffect } from "react";
 import {
-  getImageByProductId,
   getProducts,
   searchProducts,
   updateProduct,
@@ -29,8 +28,8 @@ import { API_ENDPOINTS } from "../../services/helper.service";
 import { useFormik } from "formik";
 import { useRef } from "react";
 import { getCategories } from "../../services/categories.service";
-import { imageSchema } from "../../utils/schema/image.schema";
-import { productWithoutFileSchema } from "../../utils/schema/productWithoutFile.schema";
+import { productSchema } from "../../utils/schema/product.schema";
+import { ProductImageUpload } from "../../components/admin/ProductImageUpload";
 
 const ViewProducts = () => {
   document.title = "QuickPik | View Products";
@@ -44,7 +43,6 @@ const ViewProducts = () => {
 
   // state for loading
   const [loading, setLoading] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
 
   // state for products
   const [products, setProducts] = useState(null);
@@ -73,6 +71,7 @@ const ViewProducts = () => {
     handleProductViewShow();
   };
 
+  // initial render get all products and categories
   useEffect(() => {
     getAllProducts();
     getAllCategories();
@@ -91,9 +90,7 @@ const ViewProducts = () => {
       })
       .catch((err) => {
         toast.error("Something went wrong! unable to fetch products");
-        console.log(err);
       })
-      .finally(() => {});
   };
 
   // get all categories
@@ -134,12 +131,6 @@ const ViewProducts = () => {
     // reference to the rich text editor
     const editorRef = useRef(null);
 
-    // reference to the hidden image input element
-    const imageRef = useRef(null);
-
-    // state to store the preview image
-    const [previewImage, setPreviewImage] = useState(null);
-
     // Server side validation error
     const [serverError, setServerError] = useState(null);
 
@@ -147,35 +138,11 @@ const ViewProducts = () => {
     const [selectedCategoryChangeId, setSelectedCategoryChangeId] =
       useState(null);
 
-    // formik for image upload
-    const imageFormik = useFormik({
-      initialValues: {
-        image: null,
-      },
-      validationSchema: imageSchema,
-      onSubmit: (values) => {
-        // update image logic
-        setImageLoading(true);
-        uploadProductImage(values.image, selectedProduct?.productId)
-          .then(() => {
-            toast.success("Product image updated successfully");
-            handleProductViewClose();
-          })
-          .catch((err) => {
-            toast.error("Something went wrong! Unable to update image");
-          })
-          .finally(() => {
-            setImageLoading(false);
-          });
-      },
-    });
-
     // formik for product details
     const {
       handleSubmit,
       handleChange,
       handleBlur,
-      setFieldValue,
       setFieldTouched,
       values,
       touched,
@@ -188,11 +155,10 @@ const ViewProducts = () => {
         discountedPrice: selectedProduct?.discountedPrice,
         quantity: selectedProduct?.quantity,
         description: selectedProduct?.description,
-        productImage: selectedProduct?.productImage,
         live: selectedProduct?.live,
         stock: selectedProduct?.stock,
       },
-      validationSchema: productWithoutFileSchema,
+      validationSchema: productSchema,
       onSubmit: (values) => {
         // update product details without image
         setLoading(true);
@@ -235,10 +201,6 @@ const ViewProducts = () => {
                     setServerError(err.response.data.message);
                   } else if (err?.response?.data?.errors) {
                     setServerError(err.response.data.errors);
-                  } else {
-                    toast.error(
-                      "Something went wrong! Unable to update category"
-                    );
                   }
                   window.scrollTo(0, 0); // scroll to top of page
                 });
@@ -262,40 +224,24 @@ const ViewProducts = () => {
       },
     });
 
-    // handle image selection
-    const handleImageSelection = (e) => {
-      const file = e.target.files[0];
-      imageFormik.setFieldValue("image", file);
-
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-      };
-    };
-
-    // get image for product
-    useEffect(() => {
-      if (selectedProduct?.productImage != null) {
-        getImageByProductId(selectedProduct?.productId)
-          .then((data) => {
-            const blob = new Blob([data], { type: "image/jpeg" }); // create a Blob object from the ArrayBuffer
-            const file = new File([blob], "image.jpg", {
-              type: "image/jpeg",
-            }); // create a File object from the Blob
-
-            // set image in imageFormik
-            imageFormik.setFieldValue("image", file);
-            // set image in preview
-            setPreviewImage(URL.createObjectURL(file));
-          })
-          .catch((err) => {
-            toast.error("Something went wrong! unable to fetch product image");
+    // method to upload product image
+    const handleUploadProductImage = (image, productId) => {
+      return uploadProductImage(image, productId)
+        .then((res) => {
+          toast.success("Image updated successfully");
+          // update the product in the state
+          const newArray = products.content.map((p) => {
+            if (p.productId === productId) {
+              p.productImage = res.message;
+            }
+            return p;
           });
-      } else {
-        setFieldValue("productImage", null);
-      }
-    }, []);
+          setProducts({ ...products, content: newArray });
+        })
+        .catch((err) => {
+          toast.error("Error uploading image");
+        });
+    };
 
     return (
       //  Modal for product view
@@ -331,82 +277,12 @@ const ViewProducts = () => {
                 </Row>
               )}
 
-              {/* Image form */}
-              <Form noValidate onSubmit={imageFormik.handleSubmit}>
-                <Row>
-                  <Col className="text-center mb-3">
-                    <Form.Group controlId="formFile" className="mb-3">
-                      {/* Image */}
-                      <div>
-                        {previewImage === null ? (
-                          <p>No product image</p>
-                        ) : (
-                          <img
-                            src={previewImage}
-                            alt="Profile"
-                            width="200px"
-                            height="200px"
-                            style={{ objectFit: "cover", borderRadius: "2%" }}
-                          />
-                        )}
-                      </div>
-
-                      {/* Hidden Image input */}
-                      <Form.Control
-                        hidden
-                        ref={imageRef}
-                        type="file"
-                        multiple={false}
-                        accept="image/*"
-                        onChange={handleImageSelection}
-                        onBlur={imageFormik.handleBlur}
-                        isInvalid={
-                          imageFormik.touched.image &&
-                          !!imageFormik.errors.image
-                        }
-                      />
-                      {/* Error message */}
-                      <Form.Control.Feedback type="invalid">
-                        {imageFormik.errors.image}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    {/*Button to trigger the hidden image input */}
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        imageRef.current.click();
-                      }}
-                    >
-                      Choose image
-                    </Button>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    {/* Submit button */}
-                    <Button
-                      variant="primary"
-                      className="mb-3"
-                      type="submit"
-                      disabled={imageLoading}
-                    >
-                      <Spinner
-                        animation="border"
-                        as="span"
-                        size="sm"
-                        className="me-2"
-                        // loading state for save button
-                        hidden={!imageLoading}
-                      ></Spinner>
-                      <i
-                        className="fa-solid fa-arrow-up-from-bracket me-2"
-                        hidden={imageLoading}
-                      ></i>
-                      <span>Update Image</span>
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
+              {/* Image upload component */}
+              <ProductImageUpload
+                image={selectedProduct?.productImage}
+                productId={selectedProduct?.productId}
+                handleUploadProductImage={handleUploadProductImage}
+              />
               <hr />
               {/* Product Details Form Fields */}
               <Form noValidate onSubmit={handleSubmit}>

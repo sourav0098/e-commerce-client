@@ -1,17 +1,40 @@
+import { IKContext, IKImage } from "imagekitio-react";
 import React from "react";
 import { Button, Card, Col } from "react-bootstrap";
 
-export const CategoryView = ({ category, showDeleteModal, showCategoryModal }) => {
-
+export const CategoryView = ({
+  category,
+  showDeleteModal,
+  showCategoryModal,
+}) => {
   return (
     <>
       <Col className="mb-3">
         <Card>
-          <Card.Img
-            variant="top"
-            style={{ height: "160px", objectFit: "cover" }}
-            src="https://randompicturegenerator.com/img/national-park-generator/g44ab0f039fe3369476691d11cb20c038b946a4ebf20e4474b43fc5421c2192a1609b6b72709cdb583cfc2c2bfbbbc5f9_640.jpg"
-          />
+          {category.categoryImage ? (
+            <IKContext
+              urlEndpoint={process.env.REACT_APP_IMAGE_KIT_URL}
+              publicKey={process.env.REACT_APP_IMAGE_KIT_PUBLIC_KEY}
+            >
+              <IKImage
+                path={`/categories/${category.categoryImage}`}
+                transformation={[
+                  {
+                    height: 400,
+                    width: 400,
+                  },
+                ]}
+                loading="lazy"
+                style={{ height: "160px", objectFit: "cover" }}
+              />
+            </IKContext>
+          ) : (
+            <Card.Img
+              variant="top"
+              style={{ height: "160px", objectFit: "cover" }}
+              src="/assets/no_image.png"
+            />
+          )}
           <Card.Body>
             <Card.Title>{category.categoryTitle}</Card.Title>
             <small className="d-block" style={{ height: "170px" }}>
@@ -20,7 +43,12 @@ export const CategoryView = ({ category, showDeleteModal, showCategoryModal }) =
                 : category.description}
             </small>
 
-            <Button variant="primary" size="sm" className="me-2" onClick={()=>showCategoryModal(category)}>
+            <Button
+              variant="primary"
+              size="sm"
+              className="me-2"
+              onClick={() => showCategoryModal(category)}
+            >
               View More
             </Button>
             <Button

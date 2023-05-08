@@ -3,7 +3,7 @@ import * as Yup from "yup";
 // Define an array of supported file formats
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 
-export const productSchema = Yup.object().shape({
+export const productWithFileSchema = Yup.object().shape({
   brand: Yup.string().required("Please provide a brand name"),
   title: Yup.string()
     .min(2, "Please provide a valid product name of atleast 2 characters")

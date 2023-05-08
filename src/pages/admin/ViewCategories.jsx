@@ -14,14 +14,18 @@ import {
   deleteCategory,
   getCategories,
   updateCategory,
+  uploadCategoryImage,
 } from "../../services/categories.service";
 import { toast } from "react-toastify";
 import { CategoryView } from "../../components/admin/CategoryView";
 import { categorySchema } from "../../utils/schema/category.schema";
 import { useFormik } from "formik";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { CategoryImageUpload } from "../../components/admin/CategoryImageUpload";
 
 const ViewCategories = () => {
+  document.title = "QuickPik | View Categories";
+
   const deleteIcon = {
     margin: "20px",
     border: "4px solid",
@@ -67,6 +71,25 @@ const ViewCategories = () => {
     setSelectedCategory(category);
   };
 
+  // method to upload category iamge
+  const handleUploadCategoryImage = (image, categoryId) => {
+    return uploadCategoryImage(image, categoryId)
+      .then((res) => {
+        toast.success("Image updated successfully");
+        // update the category in the state
+        const newArray = categories.content.map((c) => {
+          if (c.categoryId === categoryId) {
+            c.categoryImage = res.message;
+          }
+          return c;
+        });
+        setCategories({ ...categories, content: newArray });
+      })
+      .catch((err) => {
+        toast.error("Error uploading image");
+      });
+  };
+
   // method to delete category
   const removeCategory = () => {
     deleteCategory(deleteCategoryId)
@@ -80,7 +103,6 @@ const ViewCategories = () => {
       })
       .catch((err) => {
         toast.error("Something went wrong! Please try again later");
-        console.log(err.response.data);
       })
       .finally(() => {
         handleDeleteModalClose();
@@ -97,6 +119,7 @@ const ViewCategories = () => {
     // if current page is 0 (initial load) then fetch the categories
     if (currentPage === 0) {
       setLoading(true);
+      // fetch the categories
       getCategories()
         .then((data) => {
           setCategories(data);
@@ -130,6 +153,7 @@ const ViewCategories = () => {
 
   // Category Details Modal
   const ViewCategoryModal = () => {
+    // formik for category details
     const { handleSubmit, handleChange, handleBlur, values, touched, errors } =
       useFormik({
         initialValues: {
@@ -171,6 +195,13 @@ const ViewCategories = () => {
             <Modal.Title>Category</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {/* Category Image Upload Component */}
+            <CategoryImageUpload
+              image={selectedCategory?.categoryImage}
+              categoryId={selectedCategory?.categoryId}
+              handleUploadCategoryImage={handleUploadCategoryImage}
+            />
+            {/* Category Details Form */}
             <Form noValidate onSubmit={handleSubmit}>
               <Row>
                 <Form.Group as={Col} controlId="categoryTitle" className="mb-3">
@@ -263,7 +294,7 @@ const ViewCategories = () => {
         </Modal.Footer>
       </Modal>
       {/* Sidebar */}
-      <SideBar show={show} handleClose={handleClose}></SideBar>;
+      <SideBar show={show} handleClose={handleClose}></SideBar>
       <Container>
         <Row>
           <Col>

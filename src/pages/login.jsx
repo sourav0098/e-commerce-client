@@ -47,13 +47,13 @@ export default function Login() {
 
             // based on user role, redirect to dashboard or home page
             // NORMAL USER -> home page
-            // ADMIN -> admin dashboard
+            // ADMIN -> profile page
             res.user.roles.forEach((role) => {
               if (role.roleName === ROLES.NORMAL) {
                 navigate("/");
               }
               if (role.roleName === ROLES.ADMIN) {
-                navigate("/admin/dashboard");
+                navigate("/profile");
               }
             });
           })

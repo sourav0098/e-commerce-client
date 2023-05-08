@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import { getUserById, updateUser } from "../../services/user.service";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../components/users/ImageUpload";
-import { getImageByUserId } from "../../services/user.service";
 import axios from "axios";
 
 const Profile = () => {
@@ -28,7 +27,7 @@ const Profile = () => {
   // Server side validation error
   const [serverError, setServerError] = useState(null);
 
-  // state for image file
+  // state for image file (can be a string or file object)
   const [image, setImage] = useState(null);
 
   // state for address
@@ -86,17 +85,7 @@ const Profile = () => {
 
           // get the user's image if it exists for user otherwise set default image
           if (res.image != null) {
-            getImageByUserId(userId)
-              .then((arrayBuffer) => {
-                const blob = new Blob([arrayBuffer], { type: "image/jpeg" }); // create a Blob object from the ArrayBuffer
-                const file = new File([blob], "image.jpg", {
-                  type: "image/jpeg",
-                }); // create a File object from the Blob
-                setImage(file); // set the File object as the value of the `image` state variable
-              })
-              .catch((error) => {
-                toast.error("Something went wrong! unable to get image");
-              });
+            setImage(res.image);
           } else {
             // get default image in case user does not have an image
             axios
@@ -108,8 +97,8 @@ const Profile = () => {
                 });
                 setImage(file);
               })
-              .catch((error) => {
-                toast.error("Something went wrong! unable to get image");
+              .catch(() => {
+                toast.error("Something went wrong! unable to load image");
               });
           }
         })

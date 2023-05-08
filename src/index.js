@@ -22,7 +22,7 @@ root.render(
         autoClose={2000}
         closeOnClick
         pauseOnHover
-        theme= "colored"
+        theme="colored"
       />
     </BrowserRouter>
   // </React.StrictMode>

@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import { formatDate } from "../../services/helper.service";
 
 export const ProductView = ({ product, index, showProductViewModal }) => {
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, "0");
-    const day = d.getDate().toString().padStart(2, "0");
-    return `${day}/${month}/${year}`;
-  };
 
   const [className, setClassName] = useState("table-success");
 
@@ -26,7 +20,7 @@ export const ProductView = ({ product, index, showProductViewModal }) => {
 
   useEffect(() => {
     changeRowColor();
-  }, []);
+  }, [product?.live, product?.stock]);
 
   return (
     <>

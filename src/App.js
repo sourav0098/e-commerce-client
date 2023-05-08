@@ -17,6 +17,8 @@ import { AddCategory } from "./pages/admin/AddCategory";
 import { AddProduct } from "./pages/admin/AddProduct";
 import ViewCategories from "./pages/admin/ViewCategories";
 import ViewProducts from "./pages/admin/ViewProducts";
+import ViewOrders from "./pages/admin/ViewOrders";
+import ViewUsers from "./pages/admin/ViewUsers";
 
 const App = () => {
   return (
@@ -49,6 +51,8 @@ const App = () => {
             <Route path="/admin/categories" element={<ViewCategories />}></Route>
             <Route path="/admin/add-product" element={<AddProduct />}></Route>
             <Route path="/admin/products" element={<ViewProducts />}></Route>
+            <Route path="/admin/orders" element={<ViewOrders />}></Route>
+            <Route path="/admin/users" element={<ViewUsers />}></Route>
           </Route>
         </Routes>
         <Footer></Footer>
