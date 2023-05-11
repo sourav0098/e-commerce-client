@@ -4,15 +4,19 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user.context";
+import { Badge } from "react-bootstrap";
+import { CartContext } from "../context/cart.context";
 
-const NavbarMenu = ({handleShowCategorySidebar}) => {
+const NavbarMenu = ({ handleShowCategorySidebar }) => {
   const userContext = useContext(UserContext);
-  const navigate =useNavigate();
+  const { cart } = useContext(CartContext);
+
+  const navigate = useNavigate();
 
   // logout function
   const doLogout = () => {
     // remove user data and token from local storage and user context
-    userContext.doLogout(); 
+    userContext.doLogout();
     navigate("/login"); // redirect to login page
   };
 
@@ -59,11 +63,12 @@ const NavbarMenu = ({handleShowCategorySidebar}) => {
               {userContext.isLogin ? (
                 <>
                   <Nav.Link as={NavLink} to="/cart">
-                    <i className="fa-solid fa-cart-shopping"></i> Cart
+                    <i className="fa-solid fa-cart-shopping"></i>
+                    <Badge className="cart-badge" bg="danger">
+                      {cart && cart?.items?.length}
+                    </Badge>
                   </Nav.Link>
-                  <Nav.Link onClick={doLogout}>
-                    Logout
-                  </Nav.Link>
+                  <Nav.Link onClick={doLogout}>Logout</Nav.Link>
                   <Nav.Link as={NavLink} to="/profile">
                     Hello, {userContext.userData.fname}
                   </Nav.Link>

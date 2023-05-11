@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Badge, Button, Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../../context/cart.context";
+import { toast } from "react-toastify";
+import { UserContext } from "../../context/user.context";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { addItem } = useContext(CartContext);
+  const { isLogin } = useContext(UserContext);
+
+  const handleAddToCart = (productId, quantity = 1) => {
+    if (isLogin) {
+      const data = {
+        productId,
+        quantity,
+      };
+
+      // function call to add item to cart
+      addItem(data, () => {
+        toast.success("Item added to cart", {
+          position: "bottom-right",
+        });
+      });
+    } else {
+      toast.error("Please login to add item to cart", {
+        position: "bottom-right",
+      });
+    }
+  };
 
   return (
     <Col className="mb-3" md={6} lg={4} xl={3}>
@@ -55,7 +80,14 @@ export const ProductCard = ({ product }) => {
               </div>
             )}
           </div>
-          <Button variant="primary" size="sm" disabled={!product.stock}>
+          <Button
+            variant="primary"
+            size="sm"
+            disabled={!product.stock}
+            onClick={() => {
+              handleAddToCart(product.productId);
+            }}
+          >
             Add to Cart
           </Button>
         </Card.Body>

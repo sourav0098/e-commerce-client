@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
   PRODUCTS: "/products",
   PRODUCT_IMAGES:"/products/image",
   ORDERS: "/orders",
+  CARTS: "/carts",
 };
 
 export const formatDate = (date) => {

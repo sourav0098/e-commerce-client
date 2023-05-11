@@ -86,3 +86,12 @@
 .text-primary {
   color: var(--primary-color) !important;
 }
+
+.cart-badge {
+  position: relative;
+  top: -10px;
+  left: -5px;
+  border-radius: 50% !important;
+  font-size: 0.6rem !important;
+  padding: 4px 6px !important;
+}

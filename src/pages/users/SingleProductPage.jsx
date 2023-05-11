@@ -4,13 +4,55 @@ import { getProductById } from "../../services/product.service";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import { Badge, Button, Col, Container, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { IKContext, IKImage } from "imagekitio-react";
 import { ShowHtml } from "../../components/ShowHtml";
+import { useContext } from "react";
+import { CartContext } from "../../context/cart.context";
+import { UserContext } from "../../context/user.context";
 
 export const SingleProductPage = () => {
-  const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  document.title = `Product | ${product?.title}`;
+
+  const { isLogin } = useContext(UserContext);
+
+  const { productId } = useParams();
+
+  // cart context
+  const { addItem } = useContext(CartContext);
+
+  // quantity state for product
+  const [quantity, setQuantity] = useState(1);
+
+  // handle quantity change
+  const handleQuantityChange = (e) => {
+    setQuantity(e.target.value);
+  };
+
+  const handleAddToCart = (productId, quantity) => {
+    if (!isLogin) {
+      // if user is not logged in then show toast
+      toast.error("Please login to add item to cart", {
+        position: "bottom-right",
+      });
+    } else {
+      // if user is logged in then add item to cart
+      const data = {
+        productId,
+        quantity,
+      };
+
+      // function call to add item to cart
+      addItem(data, () => {
+        toast.success("Item added to cart", {
+          position: "bottom-right",
+        });
+      });
+    }
+  };
+
+  const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   // get product by id
   const fetchProductById = async (productId) => {
@@ -57,6 +99,26 @@ export const SingleProductPage = () => {
             {!product.stock ? <Badge bg="danger">Out of Stock</Badge> : ""}
             <h3 className="fw-semibold mb-0">{product.title}</h3>
             <p>{product.shortDescription}</p>
+
+            <div className="mb-5 d-flex gap-2 align-items-center">
+              {/* Quantity */}
+              <p className="m-0">Quantity</p>
+              <Form.Select
+                size="sm"
+                style={{ width: "75px" }}
+                value={quantity}
+                onChange={handleQuantityChange}
+              >
+                {options.map((option, index) => {
+                  return (
+                    <option value={option} key={index}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+
             {product.discountedPrice ? (
               <div className="text-muted">
                 <h4 className="d-inline mb-0 text-decoration-line-through">
@@ -72,10 +134,22 @@ export const SingleProductPage = () => {
               </div>
             )}
             <div className="mt-3">
-              <Button variant="primary" className="me-2" disabled={!product.stock}>
+              <Button
+                variant="primary"
+                className="me-2"
+                disabled={!product.stock}
+              >
                 Buy now
               </Button>
-              <Button variant="outline-primary" disabled={!product.stock}>Add to Cart</Button>
+              <Button
+                variant="outline-primary"
+                disabled={!product.stock}
+                onClick={() => {
+                  handleAddToCart(product.productId, quantity);
+                }}
+              >
+                Add to Cart
+              </Button>
             </div>
           </Col>
         </Row>
