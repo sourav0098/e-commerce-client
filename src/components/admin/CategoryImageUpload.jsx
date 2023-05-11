@@ -74,9 +74,9 @@ export const CategoryImageUpload = (props) => {
                     <img
                       src={previewImage}
                       alt="Profile"
-                      width="200px"
-                      height="200px"
-                      style={{ objectFit: "cover", borderRadius: "50%" }}
+                      width="250px"
+                      height="150px"
+                      style={{ objectFit: "cover", borderRadius: "2%" }}
                     />
                   </div>
                 ) : (
@@ -95,9 +95,9 @@ export const CategoryImageUpload = (props) => {
                           },
                         ]}
                         loading="lazy"
-                        width="200px"
-                        height="200px"
-                        style={{ objectFit: "cover", borderRadius: "50%" }}
+                        width="250px"
+                        height="150px"
+                        style={{ objectFit: "cover", borderRadius: "2%" }}
                       />
                     </IKContext>
                   )

@@ -81,6 +81,7 @@ export const AddProduct = () => {
       unitPrice: "",
       discountedPrice: "",
       quantity: "",
+      shortDescription: "",
       description: "",
       productImage: null,
       live: true,
@@ -140,6 +141,7 @@ export const AddProduct = () => {
             }
             // reset form and editor
             actions.resetForm();
+            setServerError(null);
             editorRef.current.setContent("");
           })
           .catch((err) => {
@@ -262,6 +264,7 @@ export const AddProduct = () => {
                   onChange={(e) => setSelectedCategoryId(e.target.value)}
                   value={selectedCategoryId}
                 >
+                  <option disabled selected>Select a Category</option>
                   {categories ? (
                     <>
                       {/* Show category options */}
@@ -277,7 +280,7 @@ export const AddProduct = () => {
                       })}
                     </>
                   ) : (
-                    <option value="none">None</option>
+                    ""
                   )}
                 </Form.Select>
               </Form.Group>
@@ -374,6 +377,29 @@ export const AddProduct = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Row>
+            <Row>
+              <Form.Group
+                as={Col}
+                controlId="shortDescription"
+                className="mb-3"
+              >
+                <Form.Label>Short Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  placeholder="Short Description"
+                  onChange={handleChange}
+                  rows={3}
+                  onBlur={handleBlur}
+                  value={values.shortDescription}
+                  isInvalid={
+                    touched.shortDescription && !!errors.shortDescription
+                  }
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.shortDescription}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
 
             <Row>
               <Form.Group
@@ -404,6 +430,7 @@ export const AddProduct = () => {
                       "table",
                       "help",
                     ],
+                    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | ltr rtl',
                     browser_spellcheck: true,
                     autosave_interval: "30s",
                     content_style: `

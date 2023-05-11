@@ -24,6 +24,20 @@ export const getUserById = (userId) => {
   });
 };
 
+// Get all users
+export const getAllUsers = async (
+  pageNumber,
+  pageSize = API_ENDPOINTS.USER_PAGE_SIZE,
+  sortBy = "fname",
+  sortDir = "asc"
+) => {
+  const result = await privateAxios.get(
+    `${API_ENDPOINTS.USERS}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+  );
+  return result.data;
+};
+
+// Update user by ID
 export const updateUser = (userId, data) => {
   return privateAxios
     .put(API_ENDPOINTS.USERS + "/" + userId, data)
@@ -55,4 +69,12 @@ export const uploadImage = (image, userId) => {
     .then((res) => {
       return res.data;
     });
+};
+
+// search user by fname
+export const searchUserByFname = async (fname) => {
+  const result = await privateAxios.get(
+    API_ENDPOINTS.USERS + "/search/" + fname
+  );
+  return result.data;
 };

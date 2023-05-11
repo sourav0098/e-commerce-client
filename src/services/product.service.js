@@ -17,6 +17,41 @@ export const getProducts = (
     });
 };
 
+// get products live
+export const getProductsLive = async (
+  pageNumber,
+  pageSize = API_ENDPOINTS.ALL_PRODUCT_PAGE_SIZE,
+  sortBy = "createdAt",
+  sortDir = "asc"
+) => {
+  const result = await publicAxios.get(
+    `${API_ENDPOINTS.PRODUCTS}/live?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+  );
+  return result.data;
+};
+
+// get products by id
+export const getProductById = async (productId) => {
+  const result = await publicAxios.get(
+    API_ENDPOINTS.PRODUCTS + "/" + productId
+  );
+  return result.data;
+};
+
+// get products by category id
+export const getProductsByCategoryId = async (
+  categoryId,
+  pageNumber,
+  pageSize = API_ENDPOINTS.PRODUCT_PAGE_SIZE,
+  sortBy = "createdAt",
+  sortDir = "asc"
+) => {
+  const result = await publicAxios.get(
+    `${API_ENDPOINTS.CATEGORIES}/${categoryId}${API_ENDPOINTS.PRODUCTS}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+  );
+  return result.data;
+};
+
 // create a new product without category
 export const addProductWithoutCategory = (product) => {
   return privateAxios.post(API_ENDPOINTS.PRODUCTS, product).then((res) => {

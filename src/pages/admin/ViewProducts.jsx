@@ -90,7 +90,7 @@ const ViewProducts = () => {
       })
       .catch((err) => {
         toast.error("Something went wrong! unable to fetch products");
-      })
+      });
   };
 
   // get all categories
@@ -154,6 +154,7 @@ const ViewProducts = () => {
         unitPrice: selectedProduct?.unitPrice,
         discountedPrice: selectedProduct?.discountedPrice,
         quantity: selectedProduct?.quantity,
+        shortDescription: selectedProduct?.shortDescription,
         description: selectedProduct?.description,
         live: selectedProduct?.live,
         stock: selectedProduct?.stock,
@@ -433,6 +434,29 @@ const ViewProducts = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
+                <Row>
+                  <Form.Group
+                    as={Col}
+                    controlId="shortDescription"
+                    className="mb-3"
+                  >
+                    <Form.Label>Short Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Short Description"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.shortDescription}
+                      isInvalid={
+                        touched.shortDescription && !!errors.shortDescription
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.shortDescription}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
                 {/* Product Description Row (TinyMCE) */}
                 <Row>
                   <Form.Group
@@ -464,6 +488,7 @@ const ViewProducts = () => {
                           "table",
                           "help",
                         ],
+                        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | ltr rtl',
                         browser_spellcheck: true,
                         autosave_interval: "30s",
                         content_style: `
@@ -563,7 +588,7 @@ const ViewProducts = () => {
           </div>
         ) : (
           <Container>
-            {/* Search Bar */}
+            {/* Search Bar and Color for different product status */}
             <Row>
               <Col md={4}>
                 <Form onSubmit={searchProduct}>

@@ -7,6 +7,7 @@ export const productWithFileSchema = Yup.object().shape({
   brand: Yup.string().required("Please provide a brand name"),
   title: Yup.string()
     .min(2, "Please provide a valid product name of atleast 2 characters")
+    .max(255, "Product name should be less than 255 characters")
     .required("Please provide a product name"),
   unitPrice: Yup.number()
     .required("Please provide a unit price")
@@ -43,6 +44,9 @@ export const productWithFileSchema = Yup.object().shape({
     .min(0, "Stock Quantity must be greater than or equal to 0")
     .integer("Stock Quantity should be a whole number")
     .typeError("Stock Quantity should be a whole number"),
+  shortDescription: Yup.string()
+    .max(200, "Short description should be less than 200 characters")
+    .required("Please provide a short description"),
   description: Yup.string()
     .min(10, "Please provide a valid description of atleast 10 characters")
     .required("Please provide a description"),

@@ -2,11 +2,10 @@ import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/user.context";
 
-const NavbarMenu = () => {
+const NavbarMenu = ({handleShowCategorySidebar}) => {
   const userContext = useContext(UserContext);
   const navigate =useNavigate();
 
@@ -46,13 +45,9 @@ const NavbarMenu = () => {
               <Nav.Link as={NavLink} to="/products">
                 Products
               </Nav.Link>
-              <NavDropdown title="Categories" id="collasible-nav-dropdown">
-                <NavDropdown.Item href="#action/3.2">
-                  Mobile Phones
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Laptops</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.4">Cameras</NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link onClick={handleShowCategorySidebar}>
+                Categories
+              </Nav.Link>
               <Nav.Link as={NavLink} to="/about">
                 About Us
               </Nav.Link>

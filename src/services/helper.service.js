@@ -1,6 +1,8 @@
 export const API_ENDPOINTS = {
+  USER_PAGE_SIZE: 10,
   CATEGORY_PAGE_SIZE: 8,
   PRODUCT_PAGE_SIZE: 10,
+  ALL_PRODUCT_PAGE_SIZE: 8,
   ORDER_PAGE_SIZE: 10,
 
   BASE_URL: "http://localhost:8080",
@@ -13,7 +15,6 @@ export const API_ENDPOINTS = {
   PRODUCT_IMAGES:"/products/image",
   ORDERS: "/orders",
 };
-
 
 export const formatDate = (date) => {
   const d = new Date(date);

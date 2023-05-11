@@ -14,6 +14,11 @@ export const getCategories = (
     });
 };
 
+export const getCategoryById = async (categoryId) => {
+  const result = await publicAxios.get(API_ENDPOINTS.CATEGORIES + "/" + categoryId);
+  return result.data;
+}
+
 export const addCategory = (data) => {
   return privateAxios.post(API_ENDPOINTS.CATEGORIES, data).then((res) => {
     return res.data;

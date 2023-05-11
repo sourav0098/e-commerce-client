@@ -74,6 +74,15 @@
   color: #d6d8db;
 }
 
-.page-item.active .page-link{
+.page-item.active .page-link {
   background-color: var(--primary-color) !important;
+}
+
+.product-title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
 }
