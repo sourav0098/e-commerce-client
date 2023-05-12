@@ -7,11 +7,13 @@ import { ProductCard } from "../../components/users/ProductCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export const Products = () => {
+  document.title =
+    "QuickPik | Discover the Latest Smartphones, Laptops, and More";
   const [products, setProducts] = React.useState(null);
 
   const [currentPage, setCurrentPage] = useState(0);
 
-  const fetchProductsLive = async (currentPage=0) => {
+  const fetchProductsLive = async (currentPage = 0) => {
     try {
       if (currentPage === 0) {
         const data = await getProductsLive(0);

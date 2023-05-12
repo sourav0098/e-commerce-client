@@ -17,7 +17,7 @@ export const SingleCartItem = ({ item }) => {
         <Card.Body>
           <Row>
             <Col
-              md={1}
+              xs={4} md={3} lg={2} xxl={1}
               className="d-flex align-items-center justify-content-center"
             >
               <IKContext
@@ -28,18 +28,18 @@ export const SingleCartItem = ({ item }) => {
                   path={`/products/${item.product.productImage}`}
                   transformation={[
                     {
-                      height: 100,
-                      width: 100,
+                      height: 300,
+                      width: 300,
                     },
                   ]}
-                  width="60px"
-                  height="60px"
+                  width="100%"
+                  height="100%"
                   style={{ objectFit: "cover", borderRadius: "50%" }}
                 />
               </IKContext>
             </Col>
             {/* Product Details */}
-            <Col md={9}>
+            <Col md={7} lg={8} xxl={9}>
               <h6>{item.product.title}</h6>
               <small>{item.product.shortDescription}</small>
               <Row>
@@ -77,7 +77,7 @@ export const SingleCartItem = ({ item }) => {
             </Col>
             {/* Buttons */}
             <Col
-              md={2}
+              xs={7} sm={4} md={2} lg={2}
               className="d-flex align-items-center justify-content-center"
             >
               <div className="w-100">

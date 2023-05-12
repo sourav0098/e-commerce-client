@@ -10,11 +10,14 @@ import { ProductCard } from "../../components/users/ProductCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export const CategoryProductsPage = () => {
+  
   const categoryId = useParams().categoryId;
-
+  
   const [category, setCategory] = useState(null);
   const [products, setProducts] = useState(null);
-
+  
+  document.title = `QuickPik | ${category?.categoryTitle}`;
+  
   const [currentPage, setCurrentPage] = useState(0);
 
   // get category by id

@@ -36,7 +36,7 @@ export const ShoppingCart = () => {
       ) : (
         <>
           <Row>
-            {cart.items.map((item, index) => (
+            {cart?.items.map((item, index) => (
               <SingleCartItem item={item} key={index} />
             ))}
           </Row>
@@ -44,7 +44,7 @@ export const ShoppingCart = () => {
             <Row>
               <Col className="text-end">
                 <h5>Total Amount: $ {getTotalAmount()}</h5>
-                <Button className="mb-3">Proceed to Payment</Button>
+                <Button className="mb-3" as={NavLink} to="/place-order">Proceed to Checkout</Button>
               </Col>
             </Row>
           </Container>

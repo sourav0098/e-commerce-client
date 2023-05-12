@@ -26,6 +26,9 @@ import { Products } from "./pages/users/Products";
 import { SingleProductPage } from "./pages/users/SingleProductPage";
 import { CartProvider } from "./context/cart.provider";
 import { ShoppingCart } from "./pages/users/ShoppingCart";
+import { OrderCheckout } from "./pages/users/OrderCheckout";
+import { Orders } from "./pages/users/Orders";
+import { OrderDetail } from "./pages/users/OrderDetail";
 
 const App = () => {
   // state for category sidebar
@@ -87,6 +90,9 @@ const App = () => {
             >
               <Route path="/profile" element={<Profile />}></Route>
               <Route path="/cart" element={<ShoppingCart />}></Route>
+              <Route path="/place-order" element={<OrderCheckout />}></Route>
+              <Route path="/orders" element={<Orders />}></Route>
+              <Route path="/order/:orderId" element={<OrderDetail />}></Route>
             </Route>
 
             {/* Routes only admin can access*/}

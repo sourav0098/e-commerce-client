@@ -68,6 +68,9 @@ const NavbarMenu = ({ handleShowCategorySidebar }) => {
                       {cart && cart?.items?.length}
                     </Badge>
                   </Nav.Link>
+                  <Nav.Link as={NavLink} to="/orders">
+                    Orders
+                  </Nav.Link>
                   <Nav.Link onClick={doLogout}>Logout</Nav.Link>
                   <Nav.Link as={NavLink} to="/profile">
                     Hello, {userContext.userData.fname}
