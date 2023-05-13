@@ -1,10 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
 import NavbarMenu from "./components/NavbarMenu";
 import Footer from "./components/Footer";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import UserProvider from "./context/UserProvider";
 import PrivateRoutes from "./components/auth/PrivateRoutes";
 import Profile from "./pages/users/Profile";
@@ -16,6 +12,10 @@ import ViewProducts from "./pages/admin/ViewProducts";
 import ViewOrders from "./pages/admin/ViewOrders";
 import ViewUsers from "./pages/admin/ViewUsers";
 import { useState } from "react";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { About } from "./pages/About";
+import { Contact } from "./pages/Contact";
 import { CategorySideBar } from "./components/CategorySideBar";
 import { CategoryProductsPage } from "./pages/users/CategoryProductsPage";
 import { Products } from "./pages/users/Products";
@@ -29,6 +29,7 @@ import { CategoryProvider } from "./context/CategoryProvider";
 import { Loader } from "./components/Loader";
 import { useLoader } from "./hooks/useLoader";
 import Home from "./pages/Home";
+import { Error404 } from "./pages/Error404";
 
 const App = () => {
   const loading = useLoader();
@@ -104,6 +105,8 @@ const App = () => {
                 <Route path="/admin/orders" element={<ViewOrders />}></Route>
                 <Route path="/admin/users" element={<ViewUsers />}></Route>
               </Route>
+
+              <Route path="*" element={<Error404/>}></Route>
             </Routes>
             <Footer></Footer>
           </CategoryProvider>
