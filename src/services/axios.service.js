@@ -4,7 +4,7 @@ import {
   doLogoutLocalStorage,
   getTokenFromLocalStorage,
   updateAccessTokenInLocalStorage,
-} from "../auth/helper.auth";
+} from "../auth/HelperAuth";
 import { toast } from "react-toastify";
 
 // Create a new axios instance with a baseURL that will be used for all requests

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../context/user.context";
+import { UserContext } from "../context/UserContext";
 
 export default function Hero({ title, description, children }) {
   // get user context

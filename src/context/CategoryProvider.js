@@ -2,7 +2,7 @@ import React from "react";
 import { getCategories } from "../services/categories.service";
 import { useState } from "react";
 import { useEffect } from "react";
-import { CategoryContext } from "./category.context";
+import { CategoryContext } from "./CategoryContext";
 
 export const CategoryProvider = ({ children }) => {
   // state for categories

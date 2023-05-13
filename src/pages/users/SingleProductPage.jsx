@@ -8,8 +8,8 @@ import { Badge, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { IKContext, IKImage } from "imagekitio-react";
 import { ShowHtml } from "../../components/ShowHtml";
 import { useContext } from "react";
-import { CartContext } from "../../context/cart.context";
-import { UserContext } from "../../context/user.context";
+import { CartContext } from "../../context/CartContext";
+import { UserContext } from "../../context/UserContext";
 
 export const SingleProductPage = () => {
   const [product, setProduct] = useState(null);

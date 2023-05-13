@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Badge, Button, Card, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../../context/cart.context";
+import { CartContext } from "../../context/CartContext";
 import { toast } from "react-toastify";
-import { UserContext } from "../../context/user.context";
+import { UserContext } from "../../context/UserContext";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();

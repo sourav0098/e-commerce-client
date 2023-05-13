@@ -21,7 +21,7 @@ import {
   uploadProductImage,
 } from "../../services/product.service";
 import { getCategories } from "../../services/categories.service";
-import { productWithFileSchema } from "../../utils/schema/productWithFile.schema";
+import { productWithFileSchema } from "../../utils/schema/ProductWithFileSchema";
 
 export const AddProduct = () => {
   document.title = "QuickPik | Add Product";

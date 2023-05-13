@@ -15,7 +15,7 @@ import {
   uploadCategoryImage,
 } from "../../services/categories.service";
 import { toast } from "react-toastify";
-import { categoryWithFileSchema } from "../../utils/schema/categoryWithFile.schmea";
+import { categoryWithFileSchema } from "../../utils/schema/CategoryWithFileSchema";
 
 export const AddCategory = () => {
   document.title = "QuickPik | Add Category";

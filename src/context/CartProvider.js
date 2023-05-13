@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { CartContext } from "./cart.context";
+import { CartContext } from "./CartContext";
 import { useEffect } from "react";
-import { UserContext } from "./user.context";
+import { UserContext } from "./UserContext";
 import { useContext } from "react";
 import {
   addItemToCart,

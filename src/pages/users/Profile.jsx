@@ -4,8 +4,8 @@ import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstr
 import { SideBar } from "../../components/SideBar";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import { useFormik } from "formik";
-import { UserContext } from "../../context/user.context";
-import { profileSchema } from "../../utils/schema/profile.schema";
+import { UserContext } from "../../context/UserContext";
+import { profileSchema } from "../../utils/schema/ProfileSchema";
 import { useEffect } from "react";
 import { getUserById, updateUser } from "../../services/user.service";
 import { toast } from "react-toastify";

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Nav, Offcanvas } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/user.context";
-import { isAdminUser } from "../auth/helper.auth";
+import { UserContext } from "../context/UserContext";
+import { isAdminUser } from "../auth/HelperAuth";
 
 export const SideBar = ({ show, handleClose }) => {
   const userContext = useContext(UserContext);

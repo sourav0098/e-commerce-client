@@ -2,12 +2,12 @@ import { useFormik } from "formik";
 import React from "react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-import { loginSchema } from "../utils/schema/login.schema";
+import { loginSchema } from "../utils/schema/LoginSchema";
 import { useState } from "react";
 import { loginUser } from "../services/user.service";
 import { toast } from "react-toastify";
 import { ROLES } from "../utils/roles";
-import { UserContext } from "../context/user.context";
+import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
 
 export default function Login() {

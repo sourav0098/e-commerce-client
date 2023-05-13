@@ -18,7 +18,7 @@ import {
 } from "../../services/categories.service";
 import { toast } from "react-toastify";
 import { CategoryView } from "../../components/admin/CategoryView";
-import { categorySchema } from "../../utils/schema/category.schema";
+import { categorySchema } from "../../utils/schema/CategorySchema";
 import { useFormik } from "formik";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { CategoryImageUpload } from "../../components/admin/CategoryImageUpload";

@@ -1,12 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NavbarMenu from "./components/NavbarMenu";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import UserProvider from "./context/user.provider";
+import UserProvider from "./context/UserProvider";
 import PrivateRoutes from "./components/auth/PrivateRoutes";
 import Profile from "./pages/users/Profile";
 import { ROLES } from "./utils/roles";
@@ -21,14 +20,15 @@ import { CategorySideBar } from "./components/CategorySideBar";
 import { CategoryProductsPage } from "./pages/users/CategoryProductsPage";
 import { Products } from "./pages/users/Products";
 import { SingleProductPage } from "./pages/users/SingleProductPage";
-import { CartProvider } from "./context/cart.provider";
+import { CartProvider } from "./context/CartProvider";
 import { ShoppingCart } from "./pages/users/ShoppingCart";
 import { OrderCheckout } from "./pages/users/OrderCheckout";
 import { Orders } from "./pages/users/Orders";
 import { OrderDetail } from "./pages/users/OrderDetail";
-import { CategoryProvider } from "./context/category.provider";
+import { CategoryProvider } from "./context/CategoryProvider";
 import { Loader } from "./components/Loader";
 import { useLoader } from "./hooks/useLoader";
+import Home from "./pages/Home";
 
 const App = () => {
   const loading = useLoader();
@@ -55,7 +55,7 @@ const App = () => {
             <Loader show={loading}></Loader>
             <Routes>
               {/* Routes anyone can access*/}
-              <Route path="/" element={<Index />}></Route>
+              <Route path="/" element={<Home />}></Route>
               <Route path="/login" element={<Login />}></Route>
               <Route path="/register" element={<Register />}></Route>
               <Route path="/about" element={<About />}></Route>

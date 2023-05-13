@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useFormik } from "formik";
-import { registerSchema } from "../utils/schema/register.schema";
+import { registerSchema } from "../utils/schema/RegisterSchema";
 import { registerUser } from "../services/user.service";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

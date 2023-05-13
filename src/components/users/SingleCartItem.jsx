@@ -1,7 +1,7 @@
 import { IKContext, IKImage } from "imagekitio-react";
 import React, { useContext } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { CartContext } from "../../context/cart.context";
+import { CartContext } from "../../context/CartContext";
 import { toast } from "react-toastify";
 
 export const SingleCartItem = ({ item }) => {

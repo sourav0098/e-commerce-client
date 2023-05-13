@@ -28,7 +28,7 @@ import { API_ENDPOINTS } from "../../services/helper.service";
 import { useFormik } from "formik";
 import { useRef } from "react";
 import { getCategories } from "../../services/categories.service";
-import { productSchema } from "../../utils/schema/product.schema";
+import { productSchema } from "../../utils/schema/ProductSchema";
 import { ProductImageUpload } from "../../components/admin/ProductImageUpload";
 
 const ViewProducts = () => {

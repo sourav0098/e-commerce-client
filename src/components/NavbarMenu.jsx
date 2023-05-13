@@ -3,9 +3,9 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/user.context";
+import { UserContext } from "../context/UserContext";
 import { Badge } from "react-bootstrap";
-import { CartContext } from "../context/cart.context";
+import { CartContext } from "../context/CartContext";
 
 const NavbarMenu = ({ handleShowCategorySidebar }) => {
   const userContext = useContext(UserContext);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { UserContext } from "../../context/user.context";
+import { UserContext } from "../../context/UserContext";
 import { getAllOrdersByUserId } from "../../services/order.service";
 import { useEffect } from "react";
 import { toast } from "react-toastify";

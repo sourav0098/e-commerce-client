@@ -17,7 +17,7 @@ import { OrderView } from "../../components/admin/OrderView";
 import { getAllOrders, updateOrder } from "../../services/order.service";
 import { API_ENDPOINTS } from "../../services/helper.service";
 import { useEffect } from "react";
-import { orderSchema } from "../../utils/schema/order.schema";
+import { orderSchema } from "../../utils/schema/OrderSchema";
 import { useFormik } from "formik";
 import { IKContext, IKImage } from "imagekitio-react";
 import { toast } from "react-toastify";

@@ -1,7 +1,7 @@
 import React from "react";
 import Hero from "../components/Hero";
 
-export default function Index() {
+export default function Home() {
   document.title = "QuickPik | Your Trusted Destination for the Latest Electronics";
 
   return (

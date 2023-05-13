@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, Navigate, useLocation } from "react-router-dom";
-import { getUserFromLocalStorage, isLoggedIn } from "../../auth/helper.auth";
+import { getUserFromLocalStorage, isLoggedIn } from "../../auth/HelperAuth";
 
 const PrivateRoutes = ({ allowedRole }) => {
   const location = useLocation();

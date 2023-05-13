@@ -8,6 +8,8 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import { IKContext, IKImage } from "imagekitio-react";
 
 export const OrderDetail = () => {
+  document.title = "QuickPik | View Order Details";
+
   const { orderId } = useParams();
 
   const navigate = useNavigate();
@@ -19,7 +21,6 @@ export const OrderDetail = () => {
     try {
       const data = await getOrderById(orderId);
       setOrder(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong! unable to fetch order details");
@@ -38,11 +39,11 @@ export const OrderDetail = () => {
           <hr />
         </Col>
       </Row>
-      {
-        order==null?(
-          <h4 className="text-center">No order details found</h4>
-        ):("")
-      }
+      {order == null ? (
+        <h4 className="text-center">No order details found</h4>
+      ) : (
+        ""
+      )}
 
       {order && (
         <>
@@ -170,6 +171,7 @@ export const OrderDetail = () => {
                   <h4>Order Items</h4>
                 </Col>
               </Row>
+              {/* Order Items */}
               {order.orderItems.map((item, index) => {
                 return (
                   <Row key={index} className="mb-3">

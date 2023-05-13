@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import { useRef } from "react";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { imageSchema } from "../../utils/schema/image.schema";
+import { imageSchema } from "../../utils/schema/ImageSchema";
 import { useEffect } from "react";
 import { IKContext, IKImage } from "imagekitio-react";
 
