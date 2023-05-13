@@ -5,14 +5,14 @@ export const API_ENDPOINTS = {
   ALL_PRODUCT_PAGE_SIZE: 8,
   ORDER_PAGE_SIZE: 10,
 
-  BASE_URL: "http://localhost:8080",
+  BASE_URL: process.env.REACT_APP_BASE_URL,
   LOGIN_USER: "/auth/login",
   USERS: "/users",
-  USER_IMAGES:"/users/image",
+  USER_IMAGES: "/users/image",
   CATEGORIES: "/categories",
   CATEGORIES_IMAGES: "/categories/image",
   PRODUCTS: "/products",
-  PRODUCT_IMAGES:"/products/image",
+  PRODUCT_IMAGES: "/products/image",
   ORDERS: "/orders",
   CARTS: "/carts",
 };
