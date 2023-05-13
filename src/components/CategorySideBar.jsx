@@ -1,12 +1,14 @@
 import React from "react";
 import { Nav, Offcanvas } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { CategoryContext } from "../context/category.context";
+import { useContext } from "react";
 
 export const CategorySideBar = ({
-  categories,
   showCategorySideBar,
   handleCloseCategorySideBar,
 }) => {
+  const { categories } = useContext(CategoryContext);
 
   return (
     <Offcanvas

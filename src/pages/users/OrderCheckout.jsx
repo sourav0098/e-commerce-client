@@ -72,7 +72,7 @@ export const OrderCheckout = () => {
       postalCode: "",
     },
     validationSchema: placeOrderSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, actions) => {
       setLoading(true);
       const data = {
         userId: userData.userId,
@@ -83,6 +83,7 @@ export const OrderCheckout = () => {
         postalCode: values.postalCode.replace(/\s+/g, ""),
       };
       placeOrder(data);
+      actions.resetForm();
       setLoading(false);
     },
   });

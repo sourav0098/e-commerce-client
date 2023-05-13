@@ -16,6 +16,16 @@ export const getUserFromLocalStorage = () => {
   }
 };
 
+// update access token in local storage
+export const updateAccessTokenInLocalStorage=(accessToken)=>{
+  const data = localStorage.getItem("token");
+  if (data !== null) {
+    const token = JSON.parse(data);
+    token.accessToken=accessToken;
+    localStorage.setItem("token", JSON.stringify(token));
+  }
+}
+
 // get token from local storage
 export const getTokenFromLocalStorage = () => {
   const data = localStorage.getItem("token");

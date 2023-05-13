@@ -64,9 +64,13 @@ const NavbarMenu = ({ handleShowCategorySidebar }) => {
                 <>
                   <Nav.Link as={NavLink} to="/cart">
                     <i className="fa-solid fa-cart-shopping"></i>
-                    <Badge className="cart-badge" bg="danger">
-                      {cart && cart?.items?.length}
-                    </Badge>
+                    {cart && cart?.items.length == 0 ? (
+                      ""
+                    ) : (
+                      <Badge className="cart-badge" bg="danger">
+                        {cart && cart?.items?.length}
+                      </Badge>
+                    )}
                   </Nav.Link>
                   <Nav.Link as={NavLink} to="/orders">
                     Orders

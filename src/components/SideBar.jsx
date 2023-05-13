@@ -38,18 +38,6 @@ export const SideBar = ({ show, handleClose }) => {
       </Offcanvas.Header>
       <Offcanvas.Body className="p-0">
         <ul className="list-group">
-          {isAdmin ? (
-            <Nav.Link
-              as={NavLink}
-              to="/admin/dashboard"
-              className="list-group-item sidebar-item"
-            >
-              <i className="fa-solid fa-chart-column me-2"></i>
-              <span>Dashboard</span>
-            </Nav.Link>
-          ) : (
-            ""
-          )}
           <Nav.Link
             as={NavLink}
             to="/profile"

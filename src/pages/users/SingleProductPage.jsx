@@ -119,6 +119,7 @@ export const SingleProductPage = () => {
               </Form.Select>
             </div>
 
+            <small className="text-danger fw-semibold">{product.quantity<10?(`Only ${product.quantity} left in stock`):("")}</small>
             {product.discountedPrice ? (
               <div className="text-muted">
                 <h4 className="d-inline mb-0 text-decoration-line-through">

@@ -10,14 +10,13 @@ import { ProductCard } from "../../components/users/ProductCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 export const CategoryProductsPage = () => {
-  
   const categoryId = useParams().categoryId;
-  
+
   const [category, setCategory] = useState(null);
   const [products, setProducts] = useState(null);
-  
+
   document.title = `QuickPik | ${category?.categoryTitle}`;
-  
+
   const [currentPage, setCurrentPage] = useState(0);
 
   // get category by id
@@ -34,7 +33,7 @@ export const CategoryProductsPage = () => {
   const fetchProductsByCategoryId = async (categoryId, currentPage = 0) => {
     try {
       if (currentPage === 0) {
-        const data = await getProductsByCategoryId(categoryId,currentPage);
+        const data = await getProductsByCategoryId(categoryId, currentPage);
         setProducts(data);
       } else if (currentPage > 0) {
         const data = await getProductsByCategoryId(categoryId, currentPage);
@@ -61,7 +60,7 @@ export const CategoryProductsPage = () => {
     if (categoryId) {
       fetchProductsByCategoryId(categoryId, currentPage);
     }
-  }, [currentPage]);
+  }, [currentPage, categoryId]);
 
   // loading next page
   const loadNextPage = () => {
@@ -70,11 +69,7 @@ export const CategoryProductsPage = () => {
 
   return (
     <>
-      {category === null ? (
-        <div className="text-center mb-3">
-          <Spinner animation="border" as="span" size="lg"></Spinner>
-        </div>
-      ) : (
+      {category && (
         <Container fluid>
           <Row className="mb-4">
             {/* Category Image header */}
