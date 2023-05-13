@@ -27,7 +27,7 @@ export const CategorySideBar = ({
       {categories && (
         <Offcanvas.Body className="p-0">
           <ul className="list-group">
-            {categories.content.map((category, index) => {
+            {categories && categories?.content.map((category, index) => {
               return (
                 <Nav.Link
                   key={index}

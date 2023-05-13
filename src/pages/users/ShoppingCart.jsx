@@ -30,7 +30,7 @@ export const ShoppingCart = () => {
         <Row>
           <Col className="text-center">
             <h3>No items in cart</h3>
-            <Button as={NavLink} to="/products">Go Shopping</Button>
+            <Button className="mb-3" as={NavLink} to="/products">Go Shopping</Button>
           </Col>
         </Row>
       ) : (
