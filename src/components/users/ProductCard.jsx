@@ -47,7 +47,7 @@ export const ProductCard = ({ product }) => {
         <Card.Body>
           <div className="d-flex justify-content-between">
             <small className="text-muted fw-semibold">{product.brand}</small>
-            {!product.stock ? <Badge bg="danger">Out of Stock</Badge> : ""}
+            {!product.stock || product.quantity<=0 ? <Badge bg="danger">Out of Stock</Badge> : ""}
           </div>
           <h6
             className="mb-0 product-title"
@@ -83,7 +83,7 @@ export const ProductCard = ({ product }) => {
           <Button
             variant="primary"
             size="sm"
-            disabled={!product.stock}
+            disabled={!product.stock || product.quantity <= 0}
             onClick={() => {
               handleAddToCart(product.productId);
             }}

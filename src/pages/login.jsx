@@ -42,8 +42,9 @@ export const Login = () => {
               refreshToken: res.refreshToken,
             };
 
+            const { password, ...responseUser } = res.user;
             //  set user data and login status in user context
-            userContext.doLogin(res.user, tokens);
+            userContext.doLogin(responseUser, tokens);
 
             // based on user role, redirect to dashboard or home page
             // NORMAL USER -> home page
@@ -53,7 +54,7 @@ export const Login = () => {
                 navigate("/");
               }
               if (role.roleName === ROLES.ADMIN) {
-                navigate("/profile");
+                navigate("/");
               }
             });
           })

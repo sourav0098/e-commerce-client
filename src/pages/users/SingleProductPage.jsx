@@ -52,7 +52,24 @@ export const SingleProductPage = () => {
     }
   };
 
-  const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const handleBuyNow = (productId, quantity) => {
+    if (!isLogin) {
+      // if user is not logged in then show toast
+      toast.error("Please login to buy item", {
+        position: "bottom-right",
+      });
+    } else {
+      // if user is logged in then add item to cart
+      const data = {
+        productId,
+        quantity,
+      };
+
+      // function call to add item to cart
+      addItem(data);
+      window.location.href = "/place-order";
+    }
+  };
 
   // get product by id
   const fetchProductById = async (productId) => {
@@ -96,30 +113,46 @@ export const SingleProductPage = () => {
           </Col>
           <Col md={7} lg={9}>
             <h5 className="text-muted fw-semibold mb-0">{product.brand}</h5>
-            {!product.stock ? <Badge bg="danger">Out of Stock</Badge> : ""}
+            {!product.stock || product.quantity <= 0 ? (
+              <Badge bg="danger">Out of Stock</Badge>
+            ) : (
+              ""
+            )}
             <h3 className="fw-semibold mb-0">{product.title}</h3>
             <p>{product.shortDescription}</p>
 
-            <div className="mb-5 d-flex gap-2 align-items-center">
-              {/* Quantity */}
-              <p className="m-0">Quantity</p>
-              <Form.Select
-                size="sm"
-                style={{ width: "75px" }}
-                value={quantity}
-                onChange={handleQuantityChange}
-              >
-                {options.map((option, index) => {
-                  return (
-                    <option value={option} key={index}>
-                      {option}
-                    </option>
-                  );
-                })}
-              </Form.Select>
-            </div>
+            {/* Quantity */}
+            {/* Show quantity options when quantity>0 or stock==true */}
+            {product.quantity > 0 && product.stock && (
+              <div className="mb-5 d-flex gap-2 align-items-center">
+                <p className="m-0">Quantity</p>
+                <Form.Select
+                  size="sm"
+                  style={{ width: "75px" }}
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                >
+                  {/* If quantity is > 10 then show options till 10 otherwise show options for number of quantities we have */}
+                  {product.quantity >= 10
+                    ? Array.from({ length: 10 }, (_, index) => (
+                        <option value={index + 1} key={index}>
+                          {index + 1}
+                        </option>
+                      ))
+                    : Array.from({ length: product.quantity }, (_, index) => (
+                        <option value={index + 1} key={index}>
+                          {index + 1}
+                        </option>
+                      ))}
+                </Form.Select>
+              </div>
+            )}
 
-            <small className="text-danger fw-semibold">{product.quantity<10?(`Only ${product.quantity} left in stock`):("")}</small>
+            <small className="text-danger fw-semibold">
+              {product.quantity < 10 && product.quantity > 0
+                ? `Only ${product.quantity} left in stock`
+                : ""}
+            </small>
             {product.discountedPrice ? (
               <div className="text-muted">
                 <h4 className="d-inline mb-0 text-decoration-line-through">
@@ -138,13 +171,16 @@ export const SingleProductPage = () => {
               <Button
                 variant="primary"
                 className="me-2"
-                disabled={!product.stock}
+                disabled={!product.stock || product.quantity <= 0}
+                onClick={() => {
+                  handleBuyNow(product.productId, quantity);
+                }}
               >
                 Buy now
               </Button>
               <Button
                 variant="outline-primary"
-                disabled={!product.stock}
+                disabled={!product.stock || product.quantity <= 0}
                 onClick={() => {
                   handleAddToCart(product.productId, quantity);
                 }}

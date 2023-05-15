@@ -30,6 +30,10 @@ export const Orders = () => {
     userData && loadUserOrders(userData.userId);
   }, [userData?.userId]);
 
+  useEffect(() => {
+    loadUserOrders(userData.userId);
+  }, []);
+
   return (
     <Container className="mt-3">
       <Row>

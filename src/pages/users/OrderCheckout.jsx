@@ -98,6 +98,7 @@ export const OrderCheckout = () => {
       placeOrder(data);
       actions.resetForm();
       setLoading(false);
+      navigate("/orders");
     },
   });
 

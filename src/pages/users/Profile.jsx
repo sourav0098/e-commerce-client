@@ -1,6 +1,14 @@
 import React, { useContext } from "react";
 import { useState } from "react";
-import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { SideBar } from "../../components/SideBar";
 import { AddressAutofill } from "@mapbox/search-js-react";
 import { useFormik } from "formik";
@@ -32,22 +40,20 @@ const Profile = () => {
 
   // state for address
   const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [province, setProvince] = useState("");
-  const [postalCode, setPostalCode] = useState("");
 
   // methods for handling address changes
-  const handleAddressChange = (e) => {
-    setAddress(e.target.value);
+  const handleAddressInputChange = (event) => {
+    const inputValue = event.target.value;
+    setAddress(inputValue);
+    setFieldValue("address", inputValue);
   };
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
-  const handleProvinceChange = (e) => {
-    setProvince(e.target.value);
-  };
-  const handlePostalCodeChange = (e) => {
-    setPostalCode(e.target.value);
+
+  // handle address input blur
+  const handleAddressInputBlur = (event) => {
+    const inputValue = event.target.value;
+    setAddress(inputValue);
+    setFieldTouched("address", true);
+    setFieldValue("address", inputValue);
   };
 
   // methods for sidebar
@@ -73,15 +79,14 @@ const Profile = () => {
             fname: res.fname,
             lname: res.lname,
             phone: res.phone == null ? "" : res.phone,
+            address: res.address == null ? "" : res.address,
+            city: res.city == null ? "" : res.city,
+            province: res.province == null ? "" : res.province,
+            postalCode: res.postalCode == null ? "" : res.postalCode,
           });
 
-          // setting the values of the address
+          // setting the values of the address in useState
           res.address == null ? setAddress("") : setAddress(res.address);
-          res.city == null ? setCity("") : setCity(res.city);
-          res.province == null ? setProvince("") : setProvince(res.province);
-          res.postalCode == null
-            ? setPostalCode("")
-            : setPostalCode(res.postalCode);
 
           // get the user's image if it exists for user otherwise set default image
           if (res.image != null) {
@@ -114,6 +119,8 @@ const Profile = () => {
     handleChange,
     handleBlur,
     setValues,
+    setFieldValue,
+    setFieldTouched,
     values,
     touched,
     errors,
@@ -122,19 +129,20 @@ const Profile = () => {
       fname: "",
       lname: "",
       phone: "",
+      address: "",
+      city: "",
+      province: "",
+      postalCode: "",
       image: "",
     },
     validationSchema: profileSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: (values) => {
       // set loading state to true
-      // setLoading(true);
+      setLoading(true);
       const data = {
         ...values,
         email: userContext.userData.email,
-        address,
-        city,
-        province,
-        postalCode: postalCode.replace(/\s+/g, ""), // removes all whitespace from postal code input
+        postalCode: values.postalCode.replace(/\s+/g, ""), // removes all whitespace from postal code input
       };
 
       // update user data in database
@@ -144,9 +152,6 @@ const Profile = () => {
           // show success toast
           toast.success("Profile updated successfully");
           setServerError(null);
-
-          // get updated user data from server
-          getUserFromServer();
         })
         .catch((err) => {
           if (err?.response?.data?.errors) {
@@ -210,7 +215,11 @@ const Profile = () => {
                 </Row>
               )}
               {/* Image upload component */}
-              {image == null ? "" : <ImageUpload image={image} userId={user.userId}/>}
+              {image == null ? (
+                ""
+              ) : (
+                <ImageUpload image={image} userId={user.userId} />
+              )}
 
               {/* Profile Form */}
               <Form noValidate onSubmit={handleSubmit}>
@@ -310,8 +319,13 @@ const Profile = () => {
                         placeholder="Address"
                         autoComplete="address-line-1"
                         value={address}
-                        onChange={handleAddressChange}
+                        onChange={handleAddressInputChange}
+                        onBlur={handleAddressInputBlur}
+                        isInvalid={touched.address && !!errors.address}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.address}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
                   <Row>
@@ -326,9 +340,14 @@ const Profile = () => {
                         type="text"
                         placeholder="City"
                         autoComplete="address-level2"
-                        value={city}
-                        onChange={handleCityChange}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.city}
+                        isInvalid={touched.city && !!errors.city}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.city}
+                      </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group
                       as={Col}
@@ -341,9 +360,14 @@ const Profile = () => {
                         type="text"
                         placeholder="Province"
                         autoComplete="address-level1"
-                        value={province}
-                        onChange={handleProvinceChange}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.province}
+                        isInvalid={touched.province && !!errors.province}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.province}
+                      </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group
                       as={Col}
@@ -356,9 +380,14 @@ const Profile = () => {
                         type="text"
                         placeholder="Postal Code"
                         autoComplete="postal-code"
-                        value={postalCode}
-                        onChange={handlePostalCodeChange}
+                        value={values.postalCode}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={touched.postalCode && !!errors.postalCode}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.postalCode}
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
                 </AddressAutofill>
