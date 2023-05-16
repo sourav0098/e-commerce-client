@@ -1,15 +1,26 @@
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { useContext } from "react";
+import { Col, Container, Nav, Row } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
+import { CategoryContext } from "../context/CategoryContext";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+
+  const { categories } = useContext(CategoryContext);
+
   return (
     <>
       <footer className="footer">
         <Container fluid className="bg-navbar">
           <Row className="text-white p-3 align-items-center">
             <Col xs={12} md={3} className="pb-3">
-              <div className="d-flex">
+              <div
+                className="d-flex"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/")}
+              >
                 <img
                   src="/assets/logo.png"
                   width={80}
@@ -28,19 +39,35 @@ export default function Footer() {
               </div>
             </Col>
             <Col xs={12} md={3} className="pb-3">
-              <h6>Products</h6>
+              <h6>
+                <Nav.Link as={NavLink} to="/products">
+                  Products
+                </Nav.Link>
+              </h6>
               <ul className="list-group list-unstyled">
-                <li>Smart Phones</li>
-                <li>Laptops</li>
-                <li>Headphones & Speakers</li>
-                <li>TV & Home Theatre</li>
+                {categories &&
+                  categories.content.slice(0,5).map((category, index) => {
+                    return (
+                      <Nav.Link
+                        as={NavLink}
+                        to={`/category/${category.categoryId}/products`}
+                        key={index}
+                      >
+                        {category.categoryTitle}
+                      </Nav.Link>
+                    );
+                  })}
               </ul>
             </Col>
             <Col xs={12} md={3} className="pb-3">
               <h6>Help & Support</h6>
               <ul className="list-group list-unstyled">
-                <li>About Us</li>
-                <li>Contact Us</li>
+                <Nav.Link as={NavLink} to="/about">
+                  About Us
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/contact">
+                  Contact Us
+                </Nav.Link>
                 <li>Terms of Service</li>
                 <li>Privacy Policy</li>
               </ul>

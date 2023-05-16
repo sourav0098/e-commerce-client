@@ -50,13 +50,14 @@ export const OrderCheckout = () => {
 
   const placeOrder = async (data) => {
     try {
-      await createOrder(data);
+      const result = await createOrder(data);
       setCart({ items: [] });
       Swal.fire({
         icon: "success",
         title: "Order placed successfully",
         timer: 2000,
       });
+      navigate(`order/${result.orderId}`);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -98,7 +99,6 @@ export const OrderCheckout = () => {
       placeOrder(data);
       actions.resetForm();
       setLoading(false);
-      navigate("/orders");
     },
   });
 
@@ -150,37 +150,37 @@ export const OrderCheckout = () => {
                   </Col>
                   {/* Product Details */}
                   <Col xs={8} sm={6} lg={9}>
-                      <Row>
-                        <Col>
-                          <h6
-                            className="product-title"
-                            onClick={() =>
-                              navigate("/product/" + item.product.productId)
-                            }
-                          >
-                            {item.product.title}
-                          </h6>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={6}>
-                          <small>Quantity: {item.quantity} </small>
-                        </Col>
-                        <Col md={6}>
-                          <small>
-                            Total Price: $ {item.totalPrice.toFixed(2)}
-                          </small>
-                        </Col>
-                      </Row>
-                    </Col>
+                    <Row>
+                      <Col>
+                        <h6
+                          className="product-title"
+                          onClick={() =>
+                            navigate("/product/" + item.product.productId)
+                          }
+                        >
+                          {item.product.title}
+                        </h6>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={6}>
+                        <small>Quantity: {item.quantity} </small>
+                      </Col>
+                      <Col md={6}>
+                        <small>
+                          Total Price: $ {item.totalPrice.toFixed(2)}
+                        </small>
+                      </Col>
+                    </Row>
+                  </Col>
                 </Row>
               );
             })}
-            <Row className="mb-3">
-              <Col>
-                <h4>Total Order Amount: $ {getTotalAmount()}</h4>
-              </Col>
-            </Row>
+          <Row className="mb-3">
+            <Col>
+              <h4>Total Order Amount: $ {getTotalAmount()}</h4>
+            </Col>
+          </Row>
         </Col>
         <Col lg={6}>
           <Form noValidate onSubmit={handleSubmit}>
@@ -194,7 +194,7 @@ export const OrderCheckout = () => {
                 <Form.Label>Order Name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Shopper Name"
+                  placeholder="Order Name"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.orderName}
