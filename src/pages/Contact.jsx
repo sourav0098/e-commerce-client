@@ -41,7 +41,7 @@ export const Contact = () => {
                     </a>
                   </h5>
                   <small className="text-muted fw-semibold">
-                    SOFTWARE DEVELOPER
+                    FULL STACK SOFTWARE DEVELOPER
                   </small>
                   <p className="mb-4">
                     Highly skilled software developer proficient in Java, Spring

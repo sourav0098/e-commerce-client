@@ -26,14 +26,10 @@ import { OrderCheckout } from "./pages/users/OrderCheckout";
 import { Orders } from "./pages/users/Orders";
 import { OrderDetail } from "./pages/users/OrderDetail";
 import { CategoryProvider } from "./context/CategoryProvider";
-import { Loader } from "./components/Loader";
-import { useLoader } from "./hooks/useLoader";
 import Home from "./pages/Home";
 import { Error404 } from "./pages/Error404";
 
 const App = () => {
-  const loading = useLoader();
-
   // state for category sidebar
   const [showCategorySidebar, setShowCategorySidebar] = useState(false);
 
@@ -53,7 +49,6 @@ const App = () => {
               showCategorySideBar={showCategorySidebar}
               handleCloseCategorySideBar={handleCloseCategorySidebar}
             ></CategorySideBar>
-            <Loader show={loading}></Loader>
             <Routes>
               {/* Routes anyone can access*/}
               <Route path="/" element={<Home />}></Route>

@@ -6,33 +6,33 @@ import { getAllOrdersByUserId } from "../../services/order.service";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { SingleOrderView } from "../../components/users/SingleOrderView";
+import { Loader } from "../../components/Loader";
 
 export const Orders = () => {
   document.title = "QuickPik | Orders";
 
   const { userData } = useContext(UserContext);
 
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // load user orders
   const loadUserOrders = async (userId) => {
     try {
       const data = await getAllOrdersByUserId(userId);
       setOrders(data);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
       toast.error("Failed to load orders");
     }
   };
 
   // load user orders on component mount
   useEffect(() => {
-    userData && loadUserOrders(userData.userId);
+    if (userData && userData.userId) {
+      loadUserOrders(userData.userId);
+    }
   }, [userData?.userId]);
-
-  useEffect(() => {
-    loadUserOrders(userData.userId);
-  }, []);
 
   return (
     <Container className="mt-3">
@@ -42,12 +42,19 @@ export const Orders = () => {
           <hr />
         </Col>
       </Row>
-      {orders.length === 0 ? (
-        <h4 className="text-center">No orders found</h4>
+
+      {loading ? (
+        <Loader show={loading} />
       ) : (
-        orders.map((order, index) => {
-          return <SingleOrderView order={order} key={index}></SingleOrderView>;
-        })
+        <>
+          {orders && orders.length === 0 ? (
+            <h4 className="text-center">No orders found</h4>
+          ) : (
+            orders.map((order, index) => (
+              <SingleOrderView order={order} key={index}></SingleOrderView>
+            ))
+          )}
+        </>
       )}
     </Container>
   );
