@@ -5,11 +5,13 @@ import { getProductsLive } from "../../services/product.service";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { ProductCard } from "../../components/users/ProductCard";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Loader } from "../../components/Loader";
 
 export const Products = () => {
   document.title =
     "QuickPik | Discover the Latest Smartphones, Laptops, and More";
   const [products, setProducts] = React.useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -18,6 +20,7 @@ export const Products = () => {
       if (currentPage === 0) {
         const data = await getProductsLive(0);
         setProducts(data);
+        setLoading(false);
       } else if (currentPage > 0) {
         const data = await getProductsLive(currentPage);
         setProducts({
@@ -43,8 +46,10 @@ export const Products = () => {
     fetchProductsLive(currentPage);
   }, [currentPage]);
 
-  return (
-    products && (
+  return loading ? (
+    <Loader show={loading} />
+  ) : (
+      products && (
       <InfiniteScroll
         dataLength={products.content.length}
         next={loadNextPage}
@@ -63,6 +68,6 @@ export const Products = () => {
           </Row>
         </Container>
       </InfiniteScroll>
-    )
+      )
   );
 };

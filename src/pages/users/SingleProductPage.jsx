@@ -10,10 +10,13 @@ import { ShowHtml } from "../../components/ShowHtml";
 import { useContext } from "react";
 import { CartContext } from "../../context/CartContext";
 import { UserContext } from "../../context/UserContext";
+import {Loader} from "../../components/Loader";
 
 export const SingleProductPage = () => {
   const [product, setProduct] = useState(null);
   document.title = `Product | ${product?.title}`;
+
+  const [loading, setLoading] = useState(true);
 
   const { isLogin } = useContext(UserContext);
 
@@ -76,6 +79,7 @@ export const SingleProductPage = () => {
     try {
       const data = await getProductById(productId);
       setProduct(data);
+      setLoading(false);
     } catch (error) {
       toast.error("Something went wrong! Please try again later");
     }
@@ -87,7 +91,9 @@ export const SingleProductPage = () => {
     }
   }, [productId]);
 
-  return (
+  return loading ? (
+    <Loader show={loading} />
+  ) : (
     product && (
       <Container className="mt-3">
         <Row>
