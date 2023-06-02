@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { IKContext, IKImage } from "imagekitio-react";
+import { Loader } from "../../components/Loader";
 
 export const OrderDetail = () => {
   document.title = "QuickPik | View Order Details";
@@ -15,14 +16,15 @@ export const OrderDetail = () => {
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // fetch order by id
   const fetchOrder = async (orderId) => {
     try {
       const data = await getOrderById(orderId);
       setOrder(data);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong! unable to fetch order details");
     }
   };
@@ -39,10 +41,17 @@ export const OrderDetail = () => {
           <hr />
         </Col>
       </Row>
-      {order == null ? (
-        <h4 className="text-center">No order details found</h4>
+
+      {loading ? (
+        <Loader show={loading} />
       ) : (
-        ""
+        <>
+          {order == null ? (
+            <h4 className="text-center">No order details found</h4>
+          ) : (
+            ""
+          )}
+        </>
       )}
 
       {order && (
