@@ -15,6 +15,10 @@ Our e-commerce platform offers the following key features:
 - [x] Infinite scroll and rich text editors to make product descriptions look more professional
 - [x] Client-side validation using Formik and server-side error messages for improved user experience
 
+## Future Developments
+- [x] Integrating google login
+- [x] Adding payment gateway using Stripe API
+
 ### Technologies Used
 Our e-commerce platform was built using the following technologies:
 

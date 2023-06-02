@@ -16,7 +16,7 @@ export const OrderDetail = () => {
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // fetch order by id
   const fetchOrder = async (orderId) => {
