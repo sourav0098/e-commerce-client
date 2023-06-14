@@ -44,7 +44,7 @@ export const Login = () => {
               refreshToken: res.refreshToken,
             };
 
-            const { password, ...responseUser } = res.user;
+            const { ...responseUser } = res.user;
             //  set user data and login status in user context
             userContext.doLogin(responseUser, tokens);
 
@@ -177,12 +177,13 @@ export const Login = () => {
             onSuccess={(credentialResponse) => {
               googleLogin(credentialResponse)
                 .then((res) => {
+
                   const tokens = {
                     accessToken: res.accessToken,
                     refreshToken: res.refreshToken,
                   };
 
-                  const { password, ...responseUser } = res.user;
+                  const { ...responseUser } = res.user;
                   //  set user data and login status in user context
                   userContext.doLogin(responseUser, tokens);
 
