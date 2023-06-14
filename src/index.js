@@ -7,24 +7,27 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-    <BrowserRouter>
+  <BrowserRouter>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <App />
+    </GoogleOAuthProvider>
 
-      {/* React Toastify Container */}
-      <ToastContainer
-        position="top-right"
-        hideProgressBar={true}
-        draggable
-        autoClose={2000}
-        closeOnClick
-        pauseOnHover
-        theme="colored"
-      />
-    </BrowserRouter>
+    {/* React Toastify Container */}
+    <ToastContainer
+      position="top-right"
+      hideProgressBar={true}
+      draggable
+      autoClose={2000}
+      closeOnClick
+      pauseOnHover
+      theme="colored"
+    />
+  </BrowserRouter>
   // </React.StrictMode>
 );
 

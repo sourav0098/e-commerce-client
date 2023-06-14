@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
 
   BASE_URL: process.env.REACT_APP_BASE_URL,
   LOGIN_USER: "/auth/login",
+  GOOGLE_LOGIN_USER: "/auth/google/login",
   USERS: "/users",
   USER_IMAGES: "/users/image",
   CATEGORIES: "/categories",

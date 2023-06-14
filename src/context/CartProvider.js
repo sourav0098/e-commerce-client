@@ -20,7 +20,6 @@ export const CartProvider = ({ children }) => {
       const data = await getCartByUserId(userId);
       setCart(data);
     } catch (error) {
-      console.log(error);
       setCart({ items: [] });
     }
   };

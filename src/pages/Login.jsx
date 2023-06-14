@@ -5,10 +5,12 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { loginSchema } from "../utils/schema/LoginSchema";
 import { useState } from "react";
 import { loginUser } from "../services/user.service";
+import { googleLogin } from "../services/user.service";
 import { toast } from "react-toastify";
 import { ROLES } from "../utils/roles";
 import { UserContext } from "../context/UserContext";
 import { useContext } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 
 export const Login = () => {
   document.title = "QuickPik | Login";
@@ -155,6 +157,63 @@ export const Login = () => {
           </NavLink>
         </small>
       </Form>
+
+      {/* OR */}
+      <Row className="align-items-center justify-content-center">
+        <Col xs={5} className="text-right">
+          <hr />
+        </Col>
+        <Col xs={2} className="text-center">
+          <small>OR</small>
+        </Col>
+        <Col xs={5} className="text-left">
+          <hr />
+        </Col>
+      </Row>
+      {/* Google Login */}
+      <Row>
+        <Col className="d-flex align-items-center justify-content-center mt-3 mb-3">
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              googleLogin(credentialResponse)
+                .then((res) => {
+                  const tokens = {
+                    accessToken: res.accessToken,
+                    refreshToken: res.refreshToken,
+                  };
+
+                  const { password, ...responseUser } = res.user;
+                  //  set user data and login status in user context
+                  userContext.doLogin(responseUser, tokens);
+
+                  // based on user role, redirect to dashboard or home page
+                  // NORMAL USER -> home page
+                  // ADMIN -> home page
+                  res.user.roles.forEach((role) => {
+                    if (role.roleName === ROLES.NORMAL) {
+                      navigate("/");
+                    }
+                    if (role.roleName === ROLES.ADMIN) {
+                      navigate("/");
+                    }
+                  });
+                })
+                .catch((err) => {
+                  toast.error("Something went wrong! Please try again later");
+                });
+            }}
+            onError={() => {
+              toast.error("Something went wrong! Unable to login with Google");
+            }}
+            theme="filled_blue"
+            size="large"
+            width="300"
+            text="signin_with"
+            useOneTap
+            auto_select
+          />
+        </Col>
+      </Row>
     </Container>
   );
 };

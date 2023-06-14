@@ -8,6 +8,13 @@ export const loginUser = (data) => {
   });
 };
 
+// Google Login
+export const googleLogin = (data) => {
+  return publicAxios.post(API_ENDPOINTS.GOOGLE_LOGIN_USER, data).then((res) => {
+    return res.data;
+  });
+}
+
 // Register new user
 export const registerUser = (data) => {
   // Use the publicAxios instance to send a POST request to the REGISTER_USER endpoint with the user data
