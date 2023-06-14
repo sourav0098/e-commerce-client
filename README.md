@@ -16,14 +16,20 @@ Our e-commerce platform offers the following key features:
 - [x] Client-side validation using Formik and server-side error messages for improved user experience
 
 ## Future Developments
-- [x] Integrating google login
 - [x] Adding payment gateway using Stripe API
+- [x] Adding filtering and sorting functionality to product browsing
 
 ### Technologies Used
 Our e-commerce platform was built using the following technologies:
 
 - [x] ReactJS
+- [x] Java
+- [x] Spring Boot
+- [x] MySQL
+- [x] AWS S3
 - [x] React Bootstrap
 - [x] Mapbox
 - [x] TinyMCE
 - [x] Formik
+
+Check out the backend repository [here](https://github.com/sourav0098/e-commerce-backend)
