@@ -10,7 +10,7 @@ import { CartContext } from "../context/CartContext";
 const NavbarMenu = ({ handleShowCategorySidebar }) => {
   const userContext = useContext(UserContext);
   const { cart } = useContext(CartContext);
-  const [collapsed, setCollapsed] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ const NavbarMenu = ({ handleShowCategorySidebar }) => {
 
   function toggleCollapse() {
     if (window.innerWidth < 992) {
-      setCollapsed(!collapsed);
+      setExpanded(!expanded);
     }
   }
 
@@ -35,7 +35,7 @@ const NavbarMenu = ({ handleShowCategorySidebar }) => {
         className="bg-navbar"
         variant="dark"
         sticky="top"
-        expanded={collapsed}
+        expanded={expanded}
       >
         <Container>
           <Navbar.Brand className="p-0" as={NavLink} to="/">
