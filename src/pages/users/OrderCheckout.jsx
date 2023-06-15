@@ -57,7 +57,7 @@ export const OrderCheckout = () => {
         title: "Order placed successfully",
         timer: 2000,
       });
-      navigate(`order/${result.orderId}`);
+      navigate(`/order/${result.orderId}`);
     } catch (error) {
       Swal.fire({
         icon: "error",
